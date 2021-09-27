@@ -2,16 +2,16 @@
 // Author: Larry Kuhns.
 // MIT License
 
-import { Builder } from './easyscore';
-import { Glyph } from './glyph';
+import { RuntimeError, log, defined } from './util';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
-import { ModifierContextState } from './modifiercontext';
+import { Glyph } from './glyph';
+import { Stem } from './stem';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
-import { Stem } from './stem';
-import { Tables } from './tables';
+import { ModifierContextState } from './modifiercontext';
+import { Builder } from './easyscore';
 import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
-import { defined, log, RuntimeError } from './util';
 
 export interface ArticulationStruct {
   code?: string;
@@ -164,7 +164,7 @@ function getInitialOffset(note: Note, position: number): number {
  */
 export class Articulation extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Articulation.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   /** Articulations category string. */
   static get CATEGORY(): string {
@@ -296,7 +296,7 @@ export class Articulation extends Modifier {
 
     const initialOffset = getInitialOffset(note, position);
 
-    const padding = this.musicFont.lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
+    const padding = Tables.currentMusicFont().lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
 
     let y = (
       {

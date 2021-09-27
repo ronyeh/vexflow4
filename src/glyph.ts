@@ -1,15 +1,15 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { BoundingBox } from './boundingbox';
-import { BoundingBoxComputation } from './boundingboxcomputation';
+import { defined, RuntimeError } from './util';
 import { Element } from './element';
+import { BoundingBoxComputation } from './boundingboxcomputation';
+import { BoundingBox } from './boundingbox';
 import { Font, FontGlyph } from './font';
 import { RenderContext } from './rendercontext';
+import { TypeProps } from './types/common';
 import { Stave } from './stave';
 import { Stem } from './stem';
-import { Tables } from './tables';
-import { TypeProps } from './types/common';
-import { defined, RuntimeError } from './util';
+import { Flow } from './flow';
 
 export interface DurationCode {
   common: TypeProps;
@@ -45,7 +45,6 @@ export interface GlyphProps {
 }
 
 export interface GlyphOptions {
-  fontStack: Font[];
   category?: string;
 }
 
@@ -90,18 +89,18 @@ class GlyphCacheEntry {
 }
 
 class GlyphCache {
-  protected cache: Map<Font[], Record<string, GlyphCacheEntry>> = new Map();
+  protected cache: Map<string, Record<string, GlyphCacheEntry>> = new Map();
 
-  lookup(fontStack: Font[], code: string, category?: string): GlyphCacheEntry {
-    let entries = this.cache.get(fontStack);
+  lookup(code: string, category?: string): GlyphCacheEntry {
+    let entries = this.cache.get(Glyph.CURRENT_CACHE_KEY);
     if (entries === undefined) {
       entries = {};
-      this.cache.set(fontStack, entries);
+      this.cache.set(Glyph.CURRENT_CACHE_KEY, entries);
     }
     const key = category ? `${code}%${category}` : code;
     let entry = entries[key];
     if (entry === undefined) {
-      entry = new GlyphCacheEntry(fontStack, code, category);
+      entry = new GlyphCacheEntry(Flow.getMusicFontStack(), code, category);
       entries[key] = entry;
     }
     return entry;
@@ -111,7 +110,9 @@ class GlyphCache {
 class GlyphOutline {
   private i: number = 0;
 
-  constructor(private outline: number[], private originX: number, private originY: number, private scale: number) {}
+  constructor(private outline: number[], private originX: number, private originY: number, private scale: number) {
+    // Automatically assign private properties: this.outline, this.originX, this.originY, and this.scale.
+  }
 
   done(): boolean {
     return this.i >= this.outline.length;
@@ -171,6 +172,11 @@ export class Glyph extends Element {
 
   protected static cache = new GlyphCache();
 
+  // The current cache key for GlyphCache above.
+  // Computed whenever the Flow.setMusicFontStack(...) is called.
+  // It is set to a comma separated list of font names.
+  public static CURRENT_CACHE_KEY: string = '';
+
   bbox: BoundingBox = new BoundingBox(0, 0, 0, 0);
   code: string;
   // metrics is initialised in the constructor by either setOptions or reset
@@ -179,7 +185,7 @@ export class Glyph extends Element {
   topGlyphs: Glyph[] = [];
   botGlyphs: Glyph[] = [];
 
-  protected options: GlyphOptions;
+  protected options: GlyphOptions = {};
   protected originShift: { x: number; y: number };
   protected x_shift: number;
   protected y_shift: number;
@@ -276,13 +282,9 @@ export class Glyph extends Element {
     y_pos: number,
     point: number,
     code: string,
-    options?: { font?: Font; category: string }
+    options?: { category: string }
   ): GlyphMetrics {
-    const params = {
-      fontStack: Tables.DEFAULT_FONT_STACK,
-      ...options,
-    };
-    const data = Glyph.cache.lookup(params.fontStack, code, params.category);
+    const data = Glyph.cache.lookup(code, options?.category);
     const metrics = data.metrics;
     if (data.point != -1) {
       point = data.point;
@@ -363,8 +365,8 @@ export class Glyph extends Element {
     return new BoundingBox(bboxComp.getX1(), bboxComp.getY1(), bboxComp.width(), bboxComp.height());
   }
 
-  static getWidth(fontStack: Font[], code: string, point: number, category?: string): number {
-    const data = Glyph.cache.lookup(fontStack, code, category);
+  static getWidth(code: string, point: number, category?: string): number {
+    const data = Glyph.cache.lookup(code, category);
     if (data.point != -1) {
       point = data.point;
     }
@@ -377,22 +379,15 @@ export class Glyph extends Element {
    * @param point
    * @param options
    */
-  constructor(code: string, point: number, options?: { category: string }) {
+  constructor(code: string, point: number, options?: GlyphOptions) {
     super();
 
     this.code = code;
     this.point = point;
-    this.options = {
-      fontStack: this.getFontStack(),
-    };
 
+    this.originShift = { x: 0, y: 0 };
     this.x_shift = 0;
     this.y_shift = 0;
-
-    this.originShift = {
-      x: 0,
-      y: 0,
-    };
 
     if (options) {
       this.setOptions(options);
@@ -437,7 +432,7 @@ export class Glyph extends Element {
   }
 
   reset(): void {
-    const data = Glyph.cache.lookup(this.options.fontStack, this.code, this.options.category);
+    const data = Glyph.cache.lookup(this.code, this.options.category);
     this.metrics = data.metrics;
     // Override point from metrics file
     if (data.point != -1) {

@@ -3,24 +3,24 @@
 //
 // ## Description
 //
-// This file implement `TextBrackets` which extend between two notes.
+// This file implements `TextBrackets` which extend between two notes.
 // The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
 // using this class.
 
+import { RuntimeError, log } from './util';
+import { Tables } from './tables';
 import { Element } from './element';
-import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
-import { Tables } from './tables';
-import { FontInfo } from './types/common';
-import { log, RuntimeError } from './util';
+import { Note } from './note';
+import { Font, FontStyle, FontWeight, FontInfo } from './font';
 
 export interface TextBracketParams {
   start: Note;
   stop: Note;
-  text: string;
-  superscript: string;
-  position: number | string;
+  text?: string;
+  superscript?: string;
+  position?: number | string;
 }
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
@@ -35,11 +35,18 @@ export enum TextBracketPosition {
 }
 
 export class TextBracket extends Element {
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   static get CATEGORY(): string {
     return 'TextBracket';
   }
+
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'serif' /* RONYEH: Font.SERIF */,
+    size: 15,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.ITALIC,
+  };
 
   public render_options: {
     dashed: boolean;
@@ -58,7 +65,6 @@ export class TextBracket extends Element {
   protected line: number;
   protected start: Note;
   protected stop: Note;
-  protected font: FontInfo;
 
   /**
    * @deprecated
@@ -100,11 +106,7 @@ export class TextBracket extends Element {
 
     this.line = 1;
 
-    this.font = {
-      family: 'Serif',
-      size: 15,
-      weight: 'italic',
-    };
+    this.resetFont();
 
     this.render_options = {
       dashed: true,
@@ -120,13 +122,17 @@ export class TextBracket extends Element {
     };
   }
 
-  // Apply the text backet styling to the provided `context`
-  applyStyle(context: RenderContext): this {
-    // Apply style for the octave bracket
-    context.setFont(this.font.family, this.font.size, this.font.weight);
-    context.setStrokeStyle(this.render_options.color);
-    context.setFillStyle(this.render_options.color);
-    context.setLineWidth(this.render_options.line_width);
+  /**
+   * Apply the text backet styling to the provided context.
+   * @param ctx
+   * @returns this
+   */
+  applyStyle(ctx: RenderContext): this {
+    ctx.setFont(this.font);
+    const options = this.render_options;
+    ctx.setStrokeStyle(options.color);
+    ctx.setFillStyle(options.color);
+    ctx.setLineWidth(options.line_width);
 
     return this;
   }
@@ -139,12 +145,6 @@ export class TextBracket extends Element {
     return this;
   }
 
-  // Set the font for the text
-  setFont(font: FontInfo): this {
-    // We use Object.assign to support partial updates to the font object
-    this.font = { ...this.font, ...font };
-    return this;
-  }
   // Set the rendering `context` for the octave bracket
   setLine(line: number): this {
     this.line = line;
@@ -190,8 +190,12 @@ export class TextBracket extends Element {
     // Calculate the y position for the super script
     const super_y = start.y - main_height / 2.5;
 
-    // Draw the superscript
-    ctx.setFont(this.font.family, this.font.size / 1.4, this.font.weight);
+    // We called this.resetFont() in the constructor, so we know this.textFont is available.
+    // eslint-disable-next-line
+    const { family, size, weight, style } = this.textFont!;
+    // To draw the superscript, we scale the font size by 1/1.4.
+    const smallerFontSize = Font.scaleSize(size, 0.714286);
+    ctx.setFont(family, smallerFontSize, weight, style);
     ctx.fillText(this.superscript, start.x + main_width + 1, super_y);
 
     // Determine width and height of the superscript

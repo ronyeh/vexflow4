@@ -1,25 +1,21 @@
+// [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
+//
+// Preloads all of our music engraving fonts.
+
+import { Flow } from '../flow';
+import { Font } from '../font';
 import Bravura from '../fonts/bravura';
 import Gonville from '../fonts/gonville';
 import Petaluma from '../fonts/petaluma';
 import Custom from '../fonts/custom';
-import { FontDataMetrics } from '../font';
 
-export function loadBravura(fontDataMetrics: FontDataMetrics) {
-  fontDataMetrics.fontData = Bravura.fontData;
-  fontDataMetrics.metrics = Bravura.metrics;
-}
+export function loadMusicFonts(): void {
+  // Populate our font "database" with all our music engraving fonts.
+  const bravuraFont = Font.load('Bravura', Bravura.data, Bravura.metrics);
+  const gonvilleFont = Font.load('Gonville', Gonville.data, Gonville.metrics);
+  const customFont = Font.load('Custom', Custom.data, Custom.metrics);
+  Font.load('Petaluma', Petaluma.data, Petaluma.metrics);
 
-export function loadGonville(fontDataMetrics: FontDataMetrics) {
-  fontDataMetrics.fontData = Gonville.fontData;
-  fontDataMetrics.metrics = Gonville.metrics;
-}
-
-export function loadPetaluma(fontDataMetrics: FontDataMetrics) {
-  fontDataMetrics.fontData = Petaluma.fontData;
-  fontDataMetrics.metrics = Petaluma.metrics;
-}
-
-export function loadCustom(fontDataMetrics: FontDataMetrics) {
-  fontDataMetrics.fontData = Custom.fontData;
-  fontDataMetrics.metrics = Custom.metrics;
+  // vexflow.js uses the following default font stack:
+  Flow.setMusicFontStack([bravuraFont, gonvilleFont, customFont]);
 }

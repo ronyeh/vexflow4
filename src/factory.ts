@@ -2,54 +2,53 @@
 // @author Mohit Cheppudira
 // MIT License
 
+import { RuntimeError, log, defined } from './util';
 import { Accidental } from './accidental';
-import { Annotation } from './annotation';
 import { Articulation } from './articulation';
-import { BarNote } from './barnote';
-import { Beam } from './beam';
+import { Annotation } from './annotation';
 import { ChordSymbol } from './chordsymbol';
-import { ClefNote } from './clefnote';
-import { Curve, CurveOptions } from './curve';
-import { EasyScore, EasyScoreOptions } from './easyscore';
-import { Element } from './element';
 import { Formatter, FormatterOptions } from './formatter';
 import { FretHandFinger } from './frethandfinger';
-import { GhostNote } from './ghostnote';
-import { Glyph } from './glyph';
-import { GlyphNote, GlyphNoteOptions } from './glyphnote';
-import { GraceNote, GraceNoteStruct } from './gracenote';
-import { GraceNoteGroup } from './gracenotegroup';
-import { KeySigNote } from './keysignote';
+import { StringNumber } from './stringnumber';
+import { TextDynamics } from './textdynamics';
 import { ModifierContext } from './modifiercontext';
 import { MultiMeasureRest, MultimeasureRestRenderOptions } from './multimeasurerest';
-import { Note, NoteStruct } from './note';
-import { NoteSubGroup } from './notesubgroup';
-import { PedalMarking } from './pedalmarking';
 import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
-import { RepeatNote } from './repeatnote';
 import { Stave, StaveOptions } from './stave';
-import { BarlineType } from './stavebarline';
-import { StaveConnector } from './staveconnector';
+import { StaveTie } from './stavetie';
 import { StaveLine } from './staveline';
 import { StaveNote, StaveNoteStruct } from './stavenote';
-import { StaveTie } from './stavetie';
-import { StemmableNote } from './stemmablenote';
-import { StringNumber } from './stringnumber';
+import { GlyphNote, GlyphNoteOptions } from './glyphnote';
+import { RepeatNote } from './repeatnote';
+import { StaveConnector } from './staveconnector';
 import { System, SystemOptions } from './system';
+import { TickContext } from './tickcontext';
+import { Tuplet, TupletOptions } from './tuplet';
+import { Voice, VoiceTime } from './voice';
+import { Beam } from './beam';
+import { Curve, CurveOptions } from './curve';
+import { GraceNote, GraceNoteStruct } from './gracenote';
+import { GraceNoteGroup } from './gracenotegroup';
+import { NoteSubGroup } from './notesubgroup';
+import { EasyScore, EasyScoreOptions } from './easyscore';
+import { TimeSigNote } from './timesignote';
+import { KeySigNote } from './keysignote';
+import { ClefNote } from './clefnote';
+import { PedalMarking } from './pedalmarking';
+import { TextBracket } from './textbracket';
+import { VibratoBracket } from './vibratobracket';
+import { GhostNote } from './ghostnote';
+import { BarNote } from './barnote';
 import { TabNote, TabNoteStruct } from './tabnote';
 import { TabStave } from './tabstave';
-import { TextBracket } from './textbracket';
-import { TextDynamics } from './textdynamics';
-import { TextFont, TextFontRegistry } from './textfont';
 import { TextNote, TextNoteStruct } from './textnote';
-import { TickContext } from './tickcontext';
-import { TimeSigNote } from './timesignote';
-import { Tuplet, TupletOptions } from './tuplet';
-import { FontInfo } from './types/common';
-import { defined, log, RuntimeError } from './util';
-import { VibratoBracket } from './vibratobracket';
-import { Voice, VoiceTime } from './voice';
+import { FontInfo, FontWeight, FontStyle } from './font';
+import { Note, NoteStruct } from './note';
+import { Glyph } from './glyph';
+import { BarlineType } from './stavebarline';
+import { StemmableNote } from './stemmablenote';
+import { Element } from './element';
 
 export interface FactoryOptions {
   stave?: {
@@ -62,11 +61,7 @@ export interface FactoryOptions {
     height: number;
     background?: string;
   };
-  font?: {
-    family: string;
-    size: number;
-    weight: string;
-  };
+  font?: FontInfo;
 }
 
 // eslint-disable-next-line
@@ -75,14 +70,14 @@ function L(...args: any[]) {
 }
 
 /**
- * Factory implements a high level API around VexFlow. It will eventually
- * become the canonical way to use VexFlow.
- *
- * *This API is currently DRAFT*
+ * Factory implements a high level API around VexFlow.
  */
 export class Factory {
   /** To enable logging for this class. Set `Vex.Flow.Factory.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
+
+  /** Default text font. */
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /**
    * Static simplified function to access constructor without providing FactoryOptions
@@ -125,11 +120,7 @@ export class Factory {
         height: 200,
         background: '#FFF',
       },
-      font: {
-        family: 'Arial',
-        size: 10,
-        weight: '',
-      },
+      font: Factory.TEXT_FONT,
     };
 
     this.setOptions(options);
@@ -339,29 +330,27 @@ export class Factory {
     return accid;
   }
 
-  Annotation(params?: {
-    text?: string;
-    vJustify?: string;
-    hJustify?: string;
-    fontFamily?: string;
-    fontSize?: number;
-    fontWeight?: string;
-  }): Annotation {
+  Annotation(params?: { text?: string; vJustify?: string; hJustify?: string; font?: FontInfo }): Annotation {
     const p = {
       text: 'p',
       vJustify: 'below',
       hJustify: 'center',
-      fontFamily: 'Times',
-      fontSize: 14,
-      fontWeight: 'bold italic',
       options: {},
       ...params,
     };
 
+    // RONYEH: Factory.Annotation has a different default font from new Annotation()...
+    const font = {
+      family: 'Times' /* RONYEH: Font.SERIF */,
+      size: 14,
+      weight: FontWeight.BOLD,
+      style: FontStyle.ITALIC,
+      ...p.font,
+    };
     const annotation = new Annotation(p.text);
     annotation.setJustification(p.hJustify);
     annotation.setVerticalJustification(p.vJustify);
-    annotation.setFont(p.fontFamily, p.fontSize, p.fontWeight);
+    annotation.setFont(font);
     annotation.setContext(this.context);
     return annotation;
   }
@@ -612,9 +601,6 @@ export class Factory {
     return textBracket;
   }
 
-  // TODO: SystemOptions make all properties optional.
-  // eslint-disable-next-line
-  // @ts-ignore
   System(params: SystemOptions = {}): System {
     params.factory = this;
     const system = new System(params).setContext(this.context);
@@ -663,11 +649,6 @@ export class Factory {
     const group = new NoteSubGroup(p.notes);
     group.setContext(this.context);
     return group;
-  }
-
-  TextFont(params: TextFontRegistry): TextFont {
-    params.factory = this;
-    return new TextFont(params);
   }
 
   /** Render the score. */

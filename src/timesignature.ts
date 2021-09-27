@@ -5,10 +5,11 @@
 // See tables.js for the internal time signatures
 // representation
 
+import { RuntimeError, defined } from './util';
 import { Glyph } from './glyph';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
-import { defined, RuntimeError } from './util';
+import { Tables } from './tables';
 
 export interface TimeSignatureInfo {
   glyph: Glyph;
@@ -66,8 +67,9 @@ export class TimeSignature extends StaveModifier {
 
     const padding = customPadding;
 
-    this.point = this.musicFont.lookupMetric('digits.point');
-    const fontLineShift = this.musicFont.lookupMetric('digits.shiftLine', 0);
+    const musicFont = Tables.currentMusicFont();
+    this.point = musicFont.lookupMetric('digits.point');
+    const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
     this.topLine = 2 + fontLineShift;
     this.bottomLine = 4 + fontLineShift;
     this.setPosition(StaveModifierPosition.BEGIN);

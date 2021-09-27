@@ -1,12 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
+import { Tables } from './tables';
+import { Element } from './element';
+import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
-import { Tables } from './tables';
-import { TextFont } from './textfont';
-import { FontInfo } from './types/common';
+import { TextFormatter } from './textformatter';
 import { log } from './util';
 
 // eslint-disable-next-line
@@ -36,12 +37,14 @@ enum VerticalJustify {
  */
 export class Annotation extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Annotation.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   /** Annotations category string. */
   static get CATEGORY(): string {
     return 'Annotation';
   }
+
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /** Text annotations can be positioned and justified relative to the note. */
   static Justify = Justify;
@@ -56,12 +59,12 @@ export class Annotation extends Modifier {
   static VerticalJustify = VerticalJustify;
 
   static VerticalJustifyString: Record<string, number> = {
-    above: Annotation.VerticalJustify.TOP,
-    top: Annotation.VerticalJustify.TOP,
-    below: Annotation.VerticalJustify.BOTTOM,
-    bottom: Annotation.VerticalJustify.BOTTOM,
-    center: Annotation.VerticalJustify.CENTER,
-    centerStem: Annotation.VerticalJustify.CENTER_STEM,
+    above: VerticalJustify.TOP,
+    top: VerticalJustify.TOP,
+    below: VerticalJustify.BOTTOM,
+    bottom: VerticalJustify.BOTTOM,
+    center: VerticalJustify.CENTER,
+    centerStem: VerticalJustify.CENTER_STEM,
   };
 
   /** Arrange annotations within a `ModifierContext` */
@@ -70,18 +73,15 @@ export class Annotation extends Modifier {
 
     let width = 0;
     for (let i = 0; i < annotations.length; ++i) {
-      let testWidth = 0;
+      let textWidth = 0;
       const annotation = annotations[i];
-      const textFont = TextFont.getTextFontFromVexFontData({
-        family: annotation.font.family,
-        size: annotation.font.size,
-        weight: 'normal',
-      });
+      const textFormatter = TextFormatter.create(annotation.textFont);
+
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
-      const numLines = Math.floor(textFont.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
-      // Get the string width from the font metrics
-      testWidth = textFont.getWidthForString(annotation.text);
-      width = Math.max(width, testWidth);
+      const numLines = Math.floor(textFormatter.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
+      // Get the text width from the font metrics.
+      textWidth = textFormatter.getWidthForTextInPx(annotation.text);
+      width = Math.max(width, textWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
         state.top_text_line += numLines;
@@ -98,8 +98,6 @@ export class Annotation extends Modifier {
   protected justification: Justify;
   protected vert_justification: VerticalJustify;
   protected text: string;
-  // Initialized by the constructor via this.setFont('Arial', 10).
-  protected font!: FontInfo;
 
   /**
    * Annotations inherit from `Modifier` and is positioned correctly when
@@ -112,16 +110,10 @@ export class Annotation extends Modifier {
     this.text = text;
     this.justification = Justify.CENTER;
     this.vert_justification = Annotation.VerticalJustify.TOP;
-    this.setFont('Arial', 10);
+    this.resetFont();
 
     // The default width is calculated from the text.
     this.setWidth(Tables.textWidth(text));
-  }
-
-  /** Set font family, size, and weight. E.g., `Arial`, `10pt`, `Bold`. */
-  setFont(family: string, size: number, weight: string = ''): this {
-    this.font = { family, size, weight };
-    return this;
   }
 
   /**
@@ -161,7 +153,8 @@ export class Annotation extends Modifier {
     ctx.save();
     const classString = Object.keys(this.getAttribute('classes')).join(' ');
     ctx.openGroup(classString, this.getAttribute('id'));
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.textFont);
+
     const text_width = ctx.measureText(this.text).width;
 
     // Estimate text height to be the same as the width of an 'm'.

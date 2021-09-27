@@ -33,7 +33,7 @@ function simple0(options: TestOptions): void {
     first_indices: [0],
     last_indices: [0],
     options: {
-      font: { family: 'serif', size: 12, weight: 'italic' },
+      font: { family: 'serif' /* RONYEH: Font.SERIF */, size: 12, style: 'italic' },
       text: 'gliss.',
     },
   });

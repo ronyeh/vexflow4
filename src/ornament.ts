@@ -2,16 +2,15 @@
 // Author: Cyril Silverman
 // MIT License
 
-import { Stem } from 'stem';
-import { isTabNote } from 'typeguard';
-
-import { Glyph } from './glyph';
-import { Modifier } from './modifier';
-import { ModifierContextState } from './modifiercontext';
-import { StemmableNote } from './stemmablenote';
+import { RuntimeError, log, defined } from './util';
 import { Tables } from './tables';
+import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
-import { defined, log, RuntimeError } from './util';
+import { Glyph } from './glyph';
+import { StemmableNote } from './stemmablenote';
+import { ModifierContextState } from './modifiercontext';
+import { Stem } from './stem';
+import { isTabNote } from './typeguard';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -27,7 +26,7 @@ function L(...args: any[]) {
  */
 export class Ornament extends Modifier {
   /** To enable logging for this class. Set `Vex.Flow.Ornament.DEBUG` to `true`. */
-  static DEBUG: boolean;
+  static DEBUG: boolean = false;
 
   /** Ornaments category string. */
   static get CATEGORY(): string {
@@ -155,7 +154,7 @@ export class Ornament extends Modifier {
    */
   // eslint-disable-next-line
   getMetrics(): any {
-    return this.getFontStack()[0].getMetrics().glyphs.jazzOrnaments[this.ornament.code];
+    return Tables.currentMusicFont().getMetrics().glyphs.jazzOrnaments[this.ornament.code];
   }
 
   /**

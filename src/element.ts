@@ -2,12 +2,12 @@
 // @author Mohit Cheppudira
 // MIT License
 
+import { defined } from './util';
+import { Registry } from './registry';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
-import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
-import { Tables } from './tables';
-import { defined } from './util';
+import { FontInfo, FontWeight, FontStyle } from './font';
 
 /** Element attributes. */
 export interface ElementAttributes {
@@ -43,6 +43,17 @@ export abstract class Element {
     return `auto${Element.ID++}`;
   }
 
+  /**
+   * Default font for text.
+   * See `Flow.setMusicFont(...fontNames)` to customize the font for musical symbols placed on the score.
+   */
+  static TEXT_FONT: Required<FontInfo> = {
+    family: Font.SANS_SERIF,
+    size: Font.SIZE,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
+
   private context?: RenderContext;
   protected rendered: boolean;
   protected style?: ElementStyle;
@@ -50,9 +61,12 @@ export abstract class Element {
   protected boundingBox?: BoundingBox;
   protected registry?: Registry;
 
-  // fontStack and musicFont are both initialized by the constructor via this.setFontStack(...).
-  protected fontStack!: Font[];
-  protected musicFont!: Font;
+  /**
+   * Some elements include text.
+   * The `textFont` property contains information required to style the text (i.e., font family, size, weight, and style).
+   * It starts as `undefined`, and must be set using `setFont()` or `resetFont()`.
+   */
+  protected textFont?: Required<FontInfo> = undefined;
 
   constructor() {
     this.attrs = {
@@ -63,7 +77,6 @@ export abstract class Element {
     };
 
     this.rendered = false;
-    this.setFontStack(Tables.DEFAULT_FONT_STACK);
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);
@@ -74,16 +87,66 @@ export abstract class Element {
     return (<typeof Element>this.constructor).CATEGORY;
   }
 
-  /** Set music fonts stack. */
-  setFontStack(fontStack: Font[]): this {
-    this.fontStack = fontStack;
-    this.musicFont = fontStack[0];
+  /**
+   * Set the element's font family, size, weight, style (e.g., `Arial`, `10pt`, `bold`, `italic`).
+   * @param f is 1) a `FontInfo` object or
+   *             2) a string formatted as CSS font shorthand (e.g., 'bold 10pt Arial') or
+   *             3) a string representing the font family (one of `size`, `weight`, or `style` must also be provided).
+   * @param size a string specifying the font size and unit (e.g., '16pt'), or a number (the unit is assumed to be 'pt').
+   * @param weight is a string (e.g., 'bold', 'normal') or a number (100, 200, ... 900).
+   * @param style is a string (e.g., 'italic', 'normal').
+   * If no arguments are provided, then the font is set to the default font.
+   * Each Element subclass may specify its own default by overriding the static `TEXT_FONT` property.
+   */
+  setFont(f?: string | FontInfo, size?: string | number, weight?: string | number, style?: string): this {
+    // Allow subclasses to override `TEXT_FONT`.
+    const defaultTextFont = (<typeof Element>this.constructor).TEXT_FONT;
+    const sizeWeightStyleUndefined = size === undefined && weight === undefined && style === undefined;
+    if (typeof f === 'object' || (f === undefined && sizeWeightStyleUndefined)) {
+      // `f` is case 1) a FontInfo object, or all arguments are undefined.
+      // Do not check `arguments.length === 0`, to allow the extreme edge case:
+      // setFont(undefined, undefined, undefined, undefined).
+      this.textFont = { ...defaultTextFont, ...f };
+    } else if (typeof f === 'string' && sizeWeightStyleUndefined) {
+      // `f` is case 2) CSS font shorthand.
+      this.textFont = Font.fromCSSString(f);
+    } else {
+      // `f` is case 3) a font family string (e.g., 'Times New Roman')
+      // or it is undefined while one or more of the other arguments is provided.
+      // Following CSS conventions, any unspecified params are reset to the default.
+      this.textFont = Font.validate(
+        f ?? defaultTextFont.family,
+        size ?? defaultTextFont.size,
+        weight ?? defaultTextFont.weight,
+        style ?? defaultTextFont.style
+      );
+    }
     return this;
   }
 
-  /** Get music fonts stack. */
-  getFontStack(): Font[] {
-    return this.fontStack;
+  /**
+   * Reset the text font to the style indicated by the static `TEXT_FONT` property.
+   * Subclasses can call this to initialize `textFont` for the first time.
+   */
+  resetFont(): void {
+    this.setFont();
+  }
+
+  getFont(): string {
+    return Font.toCSSString(this.textFont);
+  }
+
+  /** Return a copy of the FontInfo object, or undefined if `setFont()` has never been called. */
+  getFontInfo(): Required<FontInfo> | undefined {
+    return this.textFont ? { ...this.textFont } : undefined;
+  }
+
+  set font(f: string) {
+    this.setFont(f);
+  }
+
+  get font(): string {
+    return Font.toCSSString(this.textFont);
   }
 
   /** Set the draw style of a stemmable note. */

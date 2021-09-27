@@ -3,8 +3,7 @@
 //
 // TextBracket Tests
 
-import { FontInfo } from '../src/types/common';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
 
 const TextBracketTests = {
   Start(): void {
@@ -76,7 +75,7 @@ function simple1(options: TestOptions): void {
       options: {
         position: 'top',
         superscript: 'superscript',
-        font: { family: 'Arial', size: 15, weight: '' },
+        font: { family: 'Arial', size: 15, weight: 'normal', style: 'normal' },
       },
     }),
   ];
@@ -90,7 +89,7 @@ function simple1(options: TestOptions): void {
         superscript: 'vb',
         position: 'bottom',
         line: 3,
-        font: { size: 30 } as FontInfo,
+        font: { size: 30 },
       },
     }),
     f.TextBracket({

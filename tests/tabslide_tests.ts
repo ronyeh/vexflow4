@@ -53,6 +53,7 @@ function setupContext(options: TestOptions, width?: number): { context: RenderCo
   context.fillStyle = '#221';
   context.strokeStyle = '#221';
   context.font = '10pt Arial';
+  console.log('FONT IS ACTUALLY ' + context.font + '\n\n\n');
   const stave = new TabStave(10, 10, width || 350).addTabGlyph().setContext(context).draw();
 
   return { context, stave };

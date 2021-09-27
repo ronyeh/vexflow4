@@ -1,6 +1,8 @@
+import { Tables } from './tables';
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
+import { Barline } from './stavebarline';
 import { BarNote } from './barnote';
 import { Beam } from './beam';
 import { Bend } from './bend';
@@ -15,7 +17,7 @@ import { Dot } from './dot';
 import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
-import { Font, Fonts } from './font';
+import { Font } from './font';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -39,33 +41,30 @@ import { Ornament } from './ornament';
 import { Parser } from './parser';
 import { PedalMarking } from './pedalmarking';
 import { Registry } from './registry';
-import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
+import { RenderContext } from './rendercontext';
 import { RepeatNote } from './repeatnote';
+import { Repetition } from './staverepetition';
 import { Stave } from './stave';
-import { Barline } from './stavebarline';
 import { StaveConnector } from './staveconnector';
 import { StaveHairpin } from './stavehairpin';
 import { StaveLine } from './staveline';
 import { StaveModifier } from './stavemodifier';
 import { StaveNote } from './stavenote';
-import { Repetition } from './staverepetition';
 import { StaveTempo } from './stavetempo';
 import { StaveText } from './stavetext';
 import { StaveTie } from './stavetie';
-import { Volta } from './stavevolta';
 import { Stem } from './stem';
 import { StringNumber } from './stringnumber';
 import { Stroke } from './strokes';
 import { System } from './system';
-import { Tables } from './tables';
 import { TabNote } from './tabnote';
 import { TabSlide } from './tabslide';
 import { TabStave } from './tabstave';
 import { TabTie } from './tabtie';
 import { TextBracket } from './textbracket';
 import { TextDynamics } from './textdynamics';
-import { TextFont } from './textfont';
+import { TextFormatter } from './textformatter';
 import { TextNote } from './textnote';
 import { TickContext } from './tickcontext';
 import { TimeSignature } from './timesignature';
@@ -76,6 +75,9 @@ import { Tuplet } from './tuplet';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
+import { Volta } from './stavevolta';
+import { loadMusicFonts } from '@loadFonts';
+import { loadTextFonts } from './fonts/loadTextFonts';
 
 export const Flow = {
   Accidental,
@@ -97,7 +99,6 @@ export const Flow = {
   Element,
   Factory,
   Font,
-  Fonts,
   Formatter,
   Fraction,
   FretHandFinger,
@@ -144,7 +145,7 @@ export const Flow = {
   TabTie,
   TextBracket,
   TextDynamics,
-  TextFont,
+  TextFormatter,
   TextNote,
   TickContext,
   TimeSignature,
@@ -161,23 +162,71 @@ export const Flow = {
   BUILD: '',
   VERSION: '',
 
-  get DEFAULT_FONT_STACK(): Font[] {
-    return Tables.DEFAULT_FONT_STACK;
+  /**
+   * `Flow.setMusicFont(...fontNames)` behaves differently depending on how you use VexFlow.
+   *
+   * **CASE 1**: You are using `vexflow.js`, which includes all music fonts (Bravura, Gonville, Petaluma, Custom).
+   * In this case, calling this method is optional, since VexFlow already defaults to a music font stack of:
+   * 'Bravura', 'Gonville', 'Custom'. This method is synchronous.
+   *
+   * Examples:
+   * ```
+   * Vex.Flow.setMusicFont('Petaluma');
+   * Vex.Flow.setMusicFont('Bravura', 'Gonville');
+   * ```
+   *
+   * **CASE 2**: You are using the lighter weight `vexflow-core.js` to take advantage of lazy loading for fonts.
+   * In this case, you MUST call this method at the beginning, since the default music font stack is empty.
+   * This method is replaced by an async function, so you must use `await` or a Promise to wait for the fonts
+   * to load before proceeding. See `demos/fonts/` for examples. See `loadDynamic.ts` for implementation details.
+   *
+   * Example:
+   * ```
+   * await Vex.Flow.setMusicFont('Petaluma');
+   * ... (do VexFlow stuff) ...
+   * ```
+   * @returns CASE 1: a `Font` or an array of `Font` objects corresponding to the provided `fontNames`.
+   * @returns CASE 2: Promise<Font[]> that resolves to the same array of `Font` objects as above.
+   */
+  setMusicFont: (...fontNames: string[]): Font | Font[] => {
+    // Convert the array of font names into an array of Font objects.
+    const fonts = fontNames.map((fontName) => Font.load(fontName));
+    Flow.setMusicFontStack(fonts);
+    if (fonts.length === 1) {
+      return fonts[0];
+    } else {
+      return fonts;
+    }
   },
-  set DEFAULT_FONT_STACK(value: Font[]) {
-    Tables.DEFAULT_FONT_STACK = value;
+
+  /**
+   * Use Flow.setMusicFont(...fontNames).
+   *
+   * @param fonts
+   */
+  setMusicFontStack(fonts: Font[]): void {
+    Tables.MUSIC_FONT_STACK = fonts.slice();
+    Glyph.CURRENT_CACHE_KEY = fonts.map((font) => font.getName()).join(',');
   },
-  get DEFAULT_NOTATION_FONT_SCALE(): number {
-    return Tables.DEFAULT_NOTATION_FONT_SCALE;
+
+  /**
+   * @returns a copy of the current music font stack.
+   */
+  getMusicFontStack(): Font[] {
+    return Tables.MUSIC_FONT_STACK.slice();
   },
-  set DEFAULT_NOTATION_FONT_SCALE(value: number) {
-    Tables.DEFAULT_NOTATION_FONT_SCALE = value;
+
+  get NOTATION_FONT_SCALE(): number {
+    return Tables.NOTATION_FONT_SCALE;
   },
-  get DEFAULT_TABLATURE_FONT_SCALE(): number {
-    return Tables.DEFAULT_TABLATURE_FONT_SCALE;
+  set NOTATION_FONT_SCALE(value: number) {
+    Tables.NOTATION_FONT_SCALE = value;
   },
-  set DEFAULT_TABLATURE_FONT_SCALE(value: number) {
-    Tables.DEFAULT_TABLATURE_FONT_SCALE = value;
+  get TABLATURE_FONT_SCALE(): number {
+    return Tables.TABLATURE_FONT_SCALE;
+  },
+  set TABLATURE_FONT_SCALE(value: number) {
+    Tables.TABLATURE_FONT_SCALE = value;
   },
   get RESOLUTION(): number {
     return Tables.RESOLUTION;
@@ -231,3 +280,9 @@ export const Flow = {
     return Tables.keySignature(spec);
   },
 };
+
+// vexflow.js:      Set up the `setMusicFont()` function. Automatically load all fonts. See: loadStatic.ts.
+// vexflow-core.js: Set up the `setMusicFont()` function. Does not load any fonts.      See: loadDynamic.ts.
+loadMusicFonts();
+// Load the two text fonts that ChordSymbol & Annotation use.
+loadTextFonts();

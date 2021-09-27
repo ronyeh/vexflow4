@@ -2,18 +2,19 @@
 // MIT License
 
 import { Beam } from './beam';
+import { RuntimeError, drawDot, defined } from './util';
+import { Tables } from './tables';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stroke } from './strokes';
-import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
 import { KeyProps } from './types/common';
-import { defined, drawDot, RuntimeError } from './util';
 import { Voice } from './voice';
+import { Font } from './font';
 
 export interface NoteMetrics {
   /** The total width of the note (including modifiers). */
@@ -118,7 +119,7 @@ export abstract class Note extends Tickable {
 
     const xWidth = xEnd - xStart;
     ctx.save();
-    ctx.setFont('Arial', 8, '');
+    ctx.setFont(Font.SANS_SERIF, 8);
     ctx.fillText(Math.round(xWidth) + 'px', xStart + note.getXShift(), yPos);
 
     const y = yPos + 7;
@@ -587,7 +588,7 @@ export abstract class Note extends Tickable {
     // Position note to left edge of tick context.
     let x = tickContext.getX();
     if (this.stave) {
-      x += this.stave.getNoteStartX() + this.musicFont.lookupMetric('stave.padding');
+      x += this.stave.getNoteStartX() + Tables.currentMusicFont().lookupMetric('stave.padding');
     }
     if (this.isCenterAligned()) {
       x += this.getCenterXShift();

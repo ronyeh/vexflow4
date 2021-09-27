@@ -3,11 +3,15 @@
 //
 // Formatter Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { MockTickable } from './mocks';
+
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
 import { Flow } from 'flow';
-import { FontGlyph } from 'font';
+import { Tables } from 'tables';
+import { FontGlyph, FontWeight } from 'font';
 import { Formatter } from 'formatter';
 import { Note } from 'note';
 import { Registry } from 'registry';
@@ -15,9 +19,7 @@ import { Stave } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
 import { Voice, VoiceTime } from 'voice';
-
-import { MockTickable } from './mocks';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { Font } from 'font';
 
 const FormatterTests = {
   Start(): void {
@@ -45,6 +47,21 @@ const FormatterTests = {
     run('Proportional Formatting (20 iterations)', proportional, { debug: true, iterations: 20, alpha: 0.5 });
   },
 };
+
+// Helper function to calculate the glyph's width.
+// Should it be a static method in Glyph or Font?
+function glyphWidth(glyphName: string): number {
+  // `38` seems to be the `font_scale` specified in many classes, such as
+  // Accidental, Articulation, Ornament, Strokes. Does this mean `38pt`???
+  //
+  // However, tables.ts specifies:
+  //   NOTATION_FONT_SCALE: 39,
+  //   TABLATURE_FONT_SCALE: 39,
+
+  const glyph: FontGlyph = Tables.currentMusicFont().getGlyphs()[glyphName];
+  const widthInEm = (glyph.x_max - glyph.x_min) / Tables.currentMusicFont().getResolution();
+  return widthInEm * 38 * Font.convertToPxFrom.pt;
+}
 
 function buildTickContexts(): void {
   function createTickable(beat: number) {
@@ -296,14 +313,6 @@ function unalignedNoteDurations2(options: TestOptions): void {
 }
 
 function justifyStaveNotes(options: TestOptions): void {
-  function glyphPixels(): number {
-    return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
-  }
-
-  function glyphWidth(vexGlyph: string): number {
-    const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
-    return (glyph.x_max - glyph.x_min) * glyphPixels();
-  }
   const f = VexFlowTests.makeFactory(options, 520, 280);
   const ctx = f.getContext();
   const score = f.EasyScore();
@@ -385,16 +394,6 @@ function notesWithTab(options: TestOptions): void {
 }
 
 function multiStaves(options: TestOptions): void {
-  // Two helper functions to calculate the glyph's width.
-  // Should these be static methods in Glyph or Font?
-  function glyphPixels(): number {
-    return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
-  }
-  function glyphWidth(vexGlyph: string): number {
-    const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
-    return (glyph.x_max - glyph.x_min) * glyphPixels();
-  }
-
   const f = VexFlowTests.makeFactory(options, 600, 400);
   const ctx = f.getContext();
   const score = f.EasyScore();
@@ -713,7 +712,7 @@ function annotations(options: TestOptions): void {
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
-            .setFont('Times', 12, 'normal')
+            .setFont('Times' /* RONYEH: Font.SERIF */, 12, FontWeight.NORMAL)
         );
       }
       notes.push(note);

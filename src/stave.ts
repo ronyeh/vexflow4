@@ -1,11 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { isBarline } from 'typeguard';
-
+import { Bounds } from './types/common';
+import { FontInfo, FontStyle, FontWeight } from './font';
+import { isBarline } from './typeguard';
 import { BoundingBox } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
+import { Tables } from './tables';
 import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
@@ -14,9 +16,7 @@ import { StaveSection } from './stavesection';
 import { StaveTempo, StaveTempoOptions } from './stavetempo';
 import { StaveText } from './stavetext';
 import { Volta } from './stavevolta';
-import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
-import { Bounds, FontInfo } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {
@@ -65,6 +65,13 @@ export class Stave extends Element {
     return 'Stave';
   }
 
+  static TEXT_FONT: Required<FontInfo> = {
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF*/,
+    size: 8,
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
+  };
+
   protected start_x: number;
   protected clef: string;
   protected options: Required<StaveOptions>;
@@ -79,7 +86,6 @@ export class Stave extends Element {
   protected formatted: boolean;
   protected end_x: number;
   protected measure: number;
-  protected font: FontInfo;
   protected bounds: Bounds;
   protected readonly modifiers: StaveModifier[];
 
@@ -88,12 +94,13 @@ export class Stave extends Element {
   // This is the sum of the padding that normally goes on left + right of a stave during
   // drawing. Used to size staves correctly with content width.
   static get defaultPadding(): number {
-    const musicFont = Tables.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.currentMusicFont();
     return musicFont.lookupMetric('stave.padding') + musicFont.lookupMetric('stave.endPaddingMax');
   }
+
   // Right padding, used by system if startX is already determined.
   static get rightPadding(): number {
-    const musicFont = Tables.DEFAULT_FONT_STACK[0];
+    const musicFont = Tables.currentMusicFont();
     return musicFont.lookupMetric('stave.endPaddingMax');
   }
 
@@ -110,11 +117,8 @@ export class Stave extends Element {
     this.measure = 0;
     this.clef = 'treble';
     this.endClef = undefined;
-    this.font = {
-      family: 'sans-serif',
-      size: 8,
-      weight: '',
-    };
+    this.resetFont();
+
     this.options = {
       spacing: 2,
       thickness: 2,
@@ -765,10 +769,10 @@ export class Stave extends Element {
     // Render measure numbers
     if (this.measure > 0) {
       ctx.save();
-      ctx.setFont(this.font.family, this.font.size, this.font.weight);
-      const text_width = ctx.measureText('' + this.measure).width;
+      ctx.setFont(this.textFont);
+      const textWidth = ctx.measureText('' + this.measure).width;
       y = this.getYForTopText(0) + 3;
-      ctx.fillText('' + this.measure, this.x - text_width / 2, y);
+      ctx.fillText('' + this.measure, this.x - textWidth / 2, y);
       ctx.restore();
     }
     ctx.closeGroup();
