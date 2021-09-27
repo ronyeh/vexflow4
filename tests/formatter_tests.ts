@@ -3,6 +3,7 @@
 //
 // Formatter Tests
 
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
@@ -15,9 +16,8 @@ import { Stave } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
 import { Voice, VoiceTime } from 'voice';
-
 import { MockTickable } from './mocks';
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { TextFont } from 'textfont';
 
 const FormatterTests = {
   Start(): void {
@@ -388,10 +388,10 @@ function multiStaves(options: TestOptions): void {
   // Two helper functions to calculate the glyph's width.
   // Should these be static methods in Glyph or Font?
   function glyphPixels(): number {
-    return 96 * (38 / (Flow.DEFAULT_FONT_STACK[0].getResolution() * 72));
+    return 96 * (38 / (Flow.MUSIC_FONT_STACK[0].getResolution() * 72));
   }
   function glyphWidth(vexGlyph: string): number {
-    const glyph: FontGlyph = Flow.DEFAULT_FONT_STACK[0].getGlyphs()[vexGlyph];
+    const glyph: FontGlyph = Flow.MUSIC_FONT_STACK[0].getGlyphs()[vexGlyph];
     return (glyph.x_max - glyph.x_min) * glyphPixels();
   }
 
@@ -713,7 +713,7 @@ function annotations(options: TestOptions): void {
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
-            .setFont('Times', 12, 'normal')
+            .setFont(TextFont.SERIF, 12, 'normal')
         );
       }
       notes.push(note);

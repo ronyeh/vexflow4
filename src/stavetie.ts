@@ -4,10 +4,10 @@
 // This class implements varies types of ties between contiguous notes. The
 // ties include: regular ties, hammer ons, pull offs, and slides.
 
-import { Element } from './element';
-import { Note } from './note';
-import { FontInfo } from './types/common';
 import { RuntimeError } from './util';
+import { Element } from './element';
+import { FontInfo } from './font';
+import { Note } from './note';
 
 export interface TieNotes {
   first_note: Note;
@@ -21,6 +21,13 @@ export class StaveTie extends Element {
     return 'StaveTie';
   }
 
+  static TEXT_FONT: Required<FontInfo> = {
+    family: TextFont.SANS_SERIF,
+    size: 10,
+    weight: 'normal',
+    style: 'normal',
+  };
+
   public render_options: {
     cp2: number;
     last_x_shift: number;
@@ -29,12 +36,9 @@ export class StaveTie extends Element {
     first_x_shift: number;
     text_shift_x: number;
     y_shift: number;
-    font: FontInfo;
   };
 
   protected text?: string;
-
-  protected font: FontInfo;
 
   // notes is initialized by the constructor via this.setNotes(notes).
   protected notes!: TieNotes;
@@ -65,15 +69,9 @@ export class StaveTie extends Element {
       last_x_shift: 0,
       y_shift: 7,
       tie_spacing: 0,
-      font: { family: 'Arial', size: 10, weight: '' },
     };
 
-    this.font = this.render_options.font;
-  }
-
-  setFont(font: FontInfo): this {
-    this.font = font;
-    return this;
+    this.setFont(this.getDefaultFont());
   }
 
   setDirection(direction: number): this {
@@ -172,7 +170,7 @@ export class StaveTie extends Element {
     const stave = this.notes.first_note?.checkStave() ?? this.notes.last_note?.checkStave();
 
     ctx.save();
-    ctx.setFont(this.font.family, this.font.size, this.font.weight);
+    ctx.setFont(this.font);
     ctx.fillText(this.text, center_x + this.render_options.text_shift_x, stave.getYForTopText() - 1);
     ctx.restore();
   }

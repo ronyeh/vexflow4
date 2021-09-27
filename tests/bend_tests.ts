@@ -3,16 +3,16 @@
 //
 // Bend Tests
 
+import { VexFlowTests, TestOptions } from './vexflow_test_helpers';
+import { ContextBuilder } from 'renderer';
 import { Bend, BendPhrase } from 'bend';
 import { Formatter } from 'formatter';
 import { ModifierContext } from 'modifiercontext';
-import { Note } from 'note';
-import { ContextBuilder } from 'renderer';
 import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
-
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { Note } from 'note';
+import { TextFont } from 'textfont';
 
 const BendTests = {
   Start(): void {
@@ -40,7 +40,7 @@ function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.setRawFont(' 10pt Arial');
+  ctx.setRawFont('10pt ' + TextFont.SANS_SERIF);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [
@@ -185,7 +185,7 @@ function bendPhrase(options: TestOptions, contextBuilder: ContextBuilder): void 
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.setRawFont(' 10pt Arial');
+  ctx.setRawFont('10pt Arial');
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const phrase1 = [
