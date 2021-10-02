@@ -3,14 +3,11 @@
   <head>
     <title>VexFlow - JavaScript Music Notation and Guitar Tab</title>
     <link rel="stylesheet" href="flow.css" type="text/css" media="screen" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet" />
-    <!-- Test Dependencies: jQuery, QUnit -->
     <link rel="stylesheet" href="support/qunit.css" type="text/css" media="screen" />
     <script src="support/jquery.js"></script>
-    <script src="support/qunit.js"></script>
     <script>
       function loadScript(url) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
           var script = document.createElement('script');
           script.onload = resolve;
           script.onerror = reject;
@@ -55,22 +52,35 @@
           .attr('href', vexURL)
           .text('VexFlow Source' + info);
 
-        const runTests = () => {
-          // Show only failed tests.
-          QUnit.config.hidepassed = true;
-          QUnit.config.noglobals = true;
-          Vex.Flow.Test.run();
-        };
-
+        // When loading the current version, only load vexflow-tests.js
+        // When loading old versions, load both vexflow-debug.js and vexflow-tests.js
+        let loadVexFlowTests;
         if (isCurrentBuild) {
-          // When loading the current version, only load vexflow-tests.js
-          loadScript(testsURL).then(runTests);
+          loadVexFlowTests = () => loadScript(testsURL);
         } else {
-          // When loading previous versions, load both vexflow-debug.js and vexflow-tests.js
-          loadScript(vexURL)
-            .then(() => loadScript(testsURL))
-            .then(runTests);
+          loadVexFlowTests = () => loadScript(vexURL).then(() => loadScript(testsURL));
         }
+
+        const fontServer = 'https://unpkg.com/vexflow-fonts@1.0.1/';
+        const getFontURLs = (pathToWoff) =>
+          `url(${fontServer}${pathToWoff}2) format('woff2'), url(${fontServer}${pathToWoff}) format('woff')`;
+        const robotoFont = new FontFace('Roboto Slab', getFontURLs('robotoslab/RobotoSlab-Medium_2.001.woff'));
+        const petalumaFont = new FontFace('PetalumaScript', getFontURLs('petaluma/PetalumaScript_1.10.woff'));
+
+        loadVexFlowTests()
+          .then(() => robotoFont.load())
+          .then(() => petalumaFont.load())
+          .then(() => {
+            document.fonts.add(robotoFont);
+            document.fonts.add(petalumaFont);
+          })
+          .then(() => loadScript('support/qunit.js'))
+          .then(() => {
+            // Show only failed tests.
+            QUnit.config.hidepassed = true;
+            QUnit.config.noglobals = true;
+            Vex.Flow.Test.run();
+          });
       });
     </script>
   </head>
