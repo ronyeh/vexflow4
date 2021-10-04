@@ -268,8 +268,8 @@ export class ChordSymbol extends Modifier {
         const block = symbol.symbolBlocks[j];
         const sup = ChordSymbol.isSuperscript(block);
         const sub = ChordSymbol.isSubscript(block);
-        const subAdj = sup || sub ? ChordSymbol.superSubRatio : 1;
-        const adj = block.symbolType === SymbolTypes.GLYPH ? glyphAdj * subAdj : fontAdj * subAdj;
+        const superSubScale = sup || sub ? ChordSymbol.superSubRatio : 1;
+        const adj = block.symbolType === SymbolTypes.GLYPH ? glyphAdj * superSubScale : fontAdj * superSubScale;
 
         // If there are super/subscripts, they extend beyond the line so
         // assume they take up 2 lines
@@ -278,14 +278,16 @@ export class ChordSymbol extends Modifier {
         }
 
         // If there is a symbol-specific offset, add it but consider font
-        // size since font and glyphs will be interspersed
+        // size since font and glyphs will be interspersed.
+        const fontSize = symbol.textFormatter.sizeInPixels;
+        const superSubFontSize = fontSize * superSubScale;
         if (block.symbolType === SymbolTypes.GLYPH && block.glyph !== undefined) {
-          block.width = ChordSymbol.getWidthForGlyph(block.glyph) * symbol.pointsToPixels * subAdj;
-          block.yShift += ChordSymbol.getYShiftForGlyph(block.glyph) * symbol.pointsToPixels * subAdj;
-          block.xShift += ChordSymbol.getXShiftForGlyph(block.glyph) * symbol.pointsToPixels * subAdj;
+          block.width = ChordSymbol.getWidthForGlyph(block.glyph) * superSubFontSize;
+          block.yShift += ChordSymbol.getYShiftForGlyph(block.glyph) * superSubFontSize;
+          block.xShift += ChordSymbol.getXShiftForGlyph(block.glyph) * superSubFontSize;
           block.glyph.scale = block.glyph.scale * adj;
         } else if (block.symbolType === SymbolTypes.TEXT) {
-          block.width = block.width * symbol.textFont.pointsToPixels * subAdj;
+          block.width = block.width * superSubFontSize;
           block.yShift += symbol.getYOffsetForText(block.text) * adj;
         }
 
@@ -296,7 +298,7 @@ export class ChordSymbol extends Modifier {
         ) {
           lineSpaces = 2;
         }
-        block.width += ChordSymbol.spacingBetweenBlocks * symbol.pointsToPixels * subAdj;
+        block.width += ChordSymbol.spacingBetweenBlocks * fontSize * superSubScale;
 
         // If a subscript immediately  follows a superscript block, try to
         // overlay them.
@@ -357,7 +359,7 @@ export class ChordSymbol extends Modifier {
   protected reportWidth: boolean;
 
   // Initialized by the constructor via this.setFont().
-  protected textFont!: TextFont;
+  protected textFormatter!: TextFont;
 
   constructor() {
     super();
@@ -374,17 +376,17 @@ export class ChordSymbol extends Modifier {
     this.setFont(family, 12);
   }
 
-  /** The font size is specified in points. Convert to 'pixels' in the svg space. */
-  get pointsToPixels(): number {
-    return this.textFont.pointsToPixels;
-  }
+  /**
+   * The font size is specified in points.
+   * Convert to 'pixels'.
+   */
 
   get superscriptOffset(): number {
-    return ChordSymbol.superscriptOffset * this.pointsToPixels;
+    return ChordSymbol.superscriptOffset * this.textFormatter.sizeInPixels;
   }
 
   get subscriptOffset(): number {
-    return ChordSymbol.subscriptOffset * this.pointsToPixels;
+    return ChordSymbol.subscriptOffset * this.textFormatter.sizeInPixels;
   }
 
   setReportWidth(value: boolean): this {
@@ -407,7 +409,7 @@ export class ChordSymbol extends Modifier {
     }
     const bar = this.symbolBlocks[barIndex];
     const xoff = bar.width / 4;
-    const yoff = 0.25 * this.pointsToPixels;
+    const yoff = 0.25 * this.textFormatter.sizeInPixels;
     let symIndex = 0;
     for (symIndex === 0; symIndex < barIndex; ++symIndex) {
       const symbol = this.symbolBlocks[symIndex];
@@ -466,7 +468,7 @@ export class ChordSymbol extends Modifier {
       preKernLower = ChordSymbol.lowerKerningText.some((xx) => xx === prevSymbol.text[prevSymbol.text.length - 1]);
     }
 
-    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.pointsToPixels;
+    const kerningOffsetPixels = ChordSymbol.kerningOffset * this.textFormatter.sizeInPixels;
     // TODO: adjust kern for font size.
     // Where should this constant live?
     if (preKernUpper && currSymbol.symbolModifier === SymbolModifiers.SUPERSCRIPT) {
@@ -514,7 +516,8 @@ export class ChordSymbol extends Modifier {
     } else if (symbolType === SymbolTypes.TEXT) {
       let textWidth = 0;
       for (let i = 0; i < symbolBlock.text.length; ++i) {
-        textWidth += this.getWidthForCharacter(symbolBlock.text[i]);
+        // TODO (AaronDavidNewman / ronyeh): Should this calculation be done in pixels or in em???
+        textWidth += this.textFormatter.getWidthForCharacterInEm(symbolBlock.text[i]);
       }
       symbolBlock.width = textWidth;
     } else if (symbolType === SymbolTypes.LINE) {
@@ -522,10 +525,6 @@ export class ChordSymbol extends Modifier {
     }
 
     return symbolBlock;
-  }
-
-  getWidthForCharacter(c: string): number {
-    return this.textFont.getMetricForCharacter(c).advanceWidth / this.textFont.resolution;
   }
 
   /** Add a symbol to this chord, could be text, glyph or line. */
@@ -619,7 +618,7 @@ export class ChordSymbol extends Modifier {
     style: string = 'normal'
   ): this {
     super.setFont(f, size, weight, style);
-    this.textFont = TextFont.createTextFont(this.font);
+    this.textFormatter = TextFont.createFormatter(this.font);
     return this;
   }
 
@@ -664,17 +663,16 @@ export class ChordSymbol extends Modifier {
 
   getYOffsetForText(text: string): number {
     let acc = 0;
-    let ix = 0;
-    const resolution = this.textFont.resolution;
-    for (ix = 0; ix < text.length; ++ix) {
-      const metric = this.textFont.getMetricForCharacter(text[ix]);
-
+    let i = 0;
+    for (i = 0; i < text.length; ++i) {
+      const metric = this.textFormatter.getMetricForCharacter(text[i]);
       if (metric) {
         acc = metric.y_max < acc ? metric.y_max : acc;
       }
     }
 
-    return ix > 0 ? -1 * (acc / resolution) : 0;
+    const resolution = this.textFormatter.getResolution();
+    return i > 0 ? -1 * (acc / resolution) : 0;
   }
 
   /** Render text and glyphs above/below the note. */
@@ -728,7 +726,7 @@ export class ChordSymbol extends Modifier {
       // HorizontalJustify.CENTER_STEM
       x = note.getStemX() - this.getWidth() / 2;
     }
-    L('Rendering ChordSymbol: ', this.textFont, x, y);
+    L('Rendering ChordSymbol: ', this.textFormatter, x, y);
 
     this.symbolBlocks.forEach((symbol) => {
       const isSuper = ChordSymbol.isSuperscript(symbol);

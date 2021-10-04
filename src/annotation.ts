@@ -74,12 +74,12 @@ export class Annotation extends Modifier {
     for (let i = 0; i < annotations.length; ++i) {
       let testWidth = 0;
       const annotation = annotations[i];
-      const textFont = TextFont.createTextFont(annotation.font);
+      const textFormatter = TextFormatter.create(annotation.font);
 
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
-      const numLines = Math.floor(textFont.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
+      const numLines = Math.floor(textFormatter.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
       // Get the string width from the font metrics
-      testWidth = textFont.getWidthForString(annotation.text);
+      testWidth = textFormatter.getWidthForString(annotation.text);
       width = Math.max(width, testWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);
