@@ -14,14 +14,14 @@ import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
 import { FontInfo } from './types/common';
 import { Note } from './note';
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 export interface TextBracketParams {
   start: Note;
   stop: Note;
-  text: string;
-  superscript: string;
-  position: number | string;
+  text?: string;
+  superscript?: string;
+  position?: number | string;
 }
 
 // To enable logging for this class. Set `Vex.Flow.TextBracket.DEBUG` to `true`.
@@ -45,8 +45,8 @@ export class TextBracket extends Element {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SERIF,
     size: 15,
-    weight: 'italic',
-    style: 'normal',
+    weight: FontWeight.NORMAL,
+    style: FontStyle.ITALIC,
   };
 
   public render_options: {
@@ -195,7 +195,7 @@ export class TextBracket extends Element {
     // eslint-disable-next-line
     const { family, size, weight, style } = this.font!;
     // To draw the superscript, we scale the font size by 1/1.4.
-    const smallerFontSize = TextFont.scaleFontSize(size, 0.714286);
+    const smallerFontSize = TextFont.scaleSize(size, 0.714286);
     ctx.setFont(family, smallerFontSize, weight, style);
     ctx.fillText(this.superscript, start.x + main_width + 1, super_y);
 

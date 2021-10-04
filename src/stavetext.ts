@@ -6,7 +6,7 @@ import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Justification, TextNote } from './textnote';
 import { Stave } from './stave';
 import { FontInfo } from 'types/common';
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 export class StaveText extends StaveModifier {
   static get CATEGORY(): string {
@@ -16,8 +16,8 @@ export class StaveText extends StaveModifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SERIF,
     size: 16,
-    weight: 'normal',
-    style: 'normal',
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   protected options: {

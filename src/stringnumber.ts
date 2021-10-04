@@ -13,7 +13,7 @@ import { Note } from './note';
 import { ModifierContextState } from './modifiercontext';
 import { isStaveNote, isStemmableNote } from './typeguard';
 import { Stem } from 'stem';
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 export class StringNumber extends Modifier {
   static get CATEGORY(): string {
@@ -22,9 +22,9 @@ export class StringNumber extends Modifier {
 
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SANS_SERIF,
-    size: 10,
-    weight: 'bold',
-    style: 'normal',
+    size: TextFont.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   // ## Static Methods

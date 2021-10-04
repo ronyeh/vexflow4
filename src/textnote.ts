@@ -5,7 +5,7 @@ import { RuntimeError } from './util';
 import { Note, NoteStruct } from './note';
 import { Glyph } from './glyph';
 import { FontInfo } from './types/common';
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 export enum Justification {
   LEFT = 1,
@@ -37,8 +37,8 @@ export class TextNote extends Note {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SANS_SERIF,
     size: 12,
-    weight: 'normal',
-    style: 'normal',
+    weight: FontWeight.NORMAL,
+    style: FontStyle.NORMAL,
   };
 
   static get Justification(): typeof Justification {
@@ -221,7 +221,7 @@ export class TextNote extends Note {
       const height = ctx.measureText(this.text).height;
 
       // Scale the font size by 1/1.3.
-      const smallerFontSize = TextFont.scaleFontSize(size, 0.769231);
+      const smallerFontSize = TextFont.scaleSize(size, 0.769231);
 
       if (this.superscript) {
         ctx.setFont(family, smallerFontSize, weight, style);

@@ -2,12 +2,11 @@
 // MIT License
 
 import { Tables } from './tables';
+import { Element } from 'element';
 import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
-import { Tables } from './tables';
-import { TextFont } from './textfont';
 import { log } from './util';
 
 // eslint-disable-next-line
@@ -44,12 +43,7 @@ export class Annotation extends Modifier {
     return 'Annotation';
   }
 
-  static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SANS_SERIF,
-    size: 10,
-    weight: 'normal',
-    style: 'normal',
-  };
+  static TEXT_FONT: Required<FontInfo> = { ...Element.TEXT_FONT };
 
   /** Text annotations can be positioned and justified relative to the note. */
   static Justify = Justify;

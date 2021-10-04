@@ -9,6 +9,16 @@ import { FontInfo } from './types/common';
 import { PetalumaScriptTextMetrics } from './fonts/petalumascript_textmetrics';
 import { RobotoSlabTextMetrics } from './fonts/robotoslab_textmetrics';
 
+export enum FontWeight {
+  NORMAL = 'normal',
+  BOLD = 'bold',
+}
+
+export enum FontStyle {
+  NORMAL = 'normal',
+  ITALIC = 'italic',
+}
+
 export interface TextFontMetrics {
   x_min: number;
   x_max: number;
@@ -73,6 +83,9 @@ function isItalic(style?: string): boolean {
   }
 }
 
+// Internal <span></span> element for parsing CSS font shorthand strings.
+let fontParser: HTMLSpanElement;
+
 export class TextFont {
   /** To enable logging for this class. Set `Vex.Flow.TextFont.DEBUG` to `true`. */
   static DEBUG: boolean = false;
@@ -81,8 +94,26 @@ export class TextFont {
     return 'TextFont';
   }
 
+  /** Default sans-serif font family. */
   static SANS_SERIF: string = 'Arial, sans-serif';
-  static SERIF: string = 'Times New Roman, Times, serif';
+
+  /** Default serif font family. */
+  static SERIF: string = 'Times, Times New Roman, serif';
+
+  /** Default font size. */
+  static SIZE: number = 10;
+
+  /**
+   * @param fontShorthand a string formatted as CSS font shorthand (e.g., 'italic bold 15pt Arial').
+   */
+  static parseFont(fontShorthand: string): FontInfo {
+    if (!fontParser) {
+      fontParser = document.createElement('span');
+    }
+    fontParser.style.font = fontShorthand;
+    const { fontFamily, fontSize, fontWeight, fontStyle } = fontParser.style;
+    return { family: fontFamily, size: fontSize, weight: fontWeight, style: fontStyle };
+  }
 
   // CSS Font Sizes: 36pt == 48px == 3em == 300% == 0.5in
   /** Given a length (for units: pt, px, em, %, in, mm, cm) what is the scale factor to convert it to px? */
@@ -102,13 +133,16 @@ export class TextFont {
    * units (e.g., pt, em, %).
    * @returns the number of pixels that is equivalent to `fontSize`
    */
-  static convertToPixels(fontSize: string | number): number {
+  static convertToPixels(fontSize: string | number = TextFont.SIZE): number {
     if (typeof fontSize === 'number') {
       // Assume the fontSize is specified in pt.
       return (fontSize * 4) / 3;
     } else {
-      const value = parseInt(fontSize);
-      const unit = fontSize.replace(/[\d\s]/g, ''); // Remove all numbers and spaces.
+      const value = parseFloat(fontSize);
+      if (isNaN(value)) {
+        return 0;
+      }
+      const unit = fontSize.replace(/[\d.\s]/g, ''); // Remove all numbers, dots, spaces.
       const conversionFactor = TextFont.convertToPxScaleFactor[unit] ?? 1;
       return value * conversionFactor;
     }
@@ -263,20 +297,25 @@ export class TextFont {
   }
 
   /**
-   * 16pt * 3 = 48pt
-   * 8px / 2 = 4px
-   * @param size
-   * @param scaleFactor
-   * @returns
+   * @param fontSize a number representing a font size, or a string font size with units.
+   * @param scaleFactor multiply the size by this factor.
+   * @returns size * scaleFactor (e.g., 16pt * 3 = 48pt, 8px * 0.5 = 4px, 24 * 2 = 48)
    */
-  static scaleFontSize(size: number | string | undefined, scaleFactor: number): string | number | undefined {
-    if (size === undefined) return undefined;
-    if (typeof size === 'number') {
-      return size * scaleFactor;
+  static scaleSize<T extends number | string>(fontSize: T, scaleFactor: number): T {
+    if (typeof fontSize === 'number') {
+      return (fontSize * scaleFactor) as T;
     } else {
-      const value = parseInt(size);
-      const unit = size.replace(/[\d\s]/g, ''); // Remove all numbers and spaces.
-      return `${value * scaleFactor}${unit}`;
+      const value = parseFloat(fontSize);
+      const unit = fontSize.replace(/[\d\s]/g, ''); // Remove all numbers and spaces.
+      return `${value * scaleFactor}${unit}` as T;
+    }
+  }
+
+  static convertSizeToNumber(fontSize: number | string): number {
+    if (typeof fontSize === 'number') {
+      return fontSize;
+    } else {
+      return parseFloat(fontSize);
     }
   }
 

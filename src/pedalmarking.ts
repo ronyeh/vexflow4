@@ -7,7 +7,7 @@ import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { FontInfo } from './types/common';
 import { StaveNote } from './stavenote';
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -43,8 +43,8 @@ export class PedalMarking extends Element {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SERIF,
     size: 12,
-    weight: 'bold',
-    style: 'italic',
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
   };
 
   protected line: number;

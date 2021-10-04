@@ -14,9 +14,6 @@ export class CanvasContext extends RenderContext {
   /** Height of one line of text (in pixels). */
   textHeight: number = 0;
 
-  /** Use a hidden span element to help us parse CSS font strings. */
-  fontParser?: HTMLElement;
-
   static get WIDTH(): number {
     return 600;
   }
@@ -117,12 +114,8 @@ export class CanvasContext extends RenderContext {
    * @param font a string formatted as CSS font shorthand (e.g., 'italic bold 15pt Arial').
    */
   setRawFont(font: string): this {
-    if (!this.fontParser) {
-      this.fontParser = document.createElement('span');
-    }
-    this.fontParser.style.font = font;
     this.context2D.font = font;
-    this.textHeight = TextFont.convertToPixels(this.fontParser.style.fontSize);
+    this.textHeight = TextFont.convertToPixels(TextFont.parseFont(font).size);
     return this;
   }
 

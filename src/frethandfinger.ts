@@ -9,7 +9,7 @@ import { FontInfo } from './types/common';
 import { StaveNote } from './stavenote';
 import { Builder } from './easyscore';
 import { ModifierContextState } from './modifiercontext';
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {
@@ -19,8 +19,8 @@ export class FretHandFinger extends Modifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SANS_SERIF,
     size: 9,
-    weight: 'bold',
-    style: 'normal',
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   // Arrange fingerings inside a ModifierContext.

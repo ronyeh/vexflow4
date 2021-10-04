@@ -6,7 +6,7 @@ import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
 import { FontInfo } from 'types/common';
-import { TextFont } from 'textfont';
+import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 export interface StaveTempoOptions {
   bpm?: number;
@@ -23,8 +23,8 @@ export class StaveTempo extends StaveModifier {
   static TEXT_FONT: Required<FontInfo> = {
     family: TextFont.SERIF,
     size: 14,
-    weight: 'bold',
-    style: 'normal',
+    weight: FontWeight.BOLD,
+    style: FontStyle.NORMAL,
   };
 
   protected tempo: StaveTempoOptions;
