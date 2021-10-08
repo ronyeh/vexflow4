@@ -1,5 +1,6 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
+
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { Font, FontInfo } from './font';
 import { warn } from './util';
@@ -82,7 +83,7 @@ export class CanvasContext extends RenderContext {
    * @param style is inserted into the font-style attribute (e.g., font-style="italic")
    */
   setFont(
-    f: string | FontInfo = TextFont.SANS_SERIF,
+    f: string | FontInfo = Font.SANS_SERIF,
     size: string | number = 10,
     weight: string | number = 'normal',
     style: string = 'normal'
@@ -91,13 +92,13 @@ export class CanvasContext extends RenderContext {
     if (typeof f === 'string') {
       family = f;
     } else {
-      family = f.family ?? TextFont.SANS_SERIF;
+      family = f.family ?? Font.SANS_SERIF;
       size = f.size ?? 10;
       weight = f.weight ?? 'normal';
       style = f.style ?? 'normal';
     }
 
-    this.textHeight = TextFont.convertToPixels(size);
+    this.textHeight = Font.convertToPixels(size);
 
     // Backwards compatibility with 3.0.9.
     // If size is a number, we assume the unit is pt.
@@ -115,7 +116,7 @@ export class CanvasContext extends RenderContext {
    */
   setRawFont(font: string): this {
     this.context2D.font = font;
-    this.textHeight = TextFont.convertToPixels(TextFont.parseFont(font).size);
+    this.textHeight = Font.convertToPixels(Font.parseFont(font).size);
     return this;
   }
 
@@ -173,7 +174,7 @@ export class CanvasContext extends RenderContext {
   }
 
   resize(width: number, height: number): this {
-    const canvasElement = this.vexFlowCanvasContext.canvas;
+    const canvasElement = this.context2D.canvas;
     const devicePixelRatio = window.devicePixelRatio || 1;
 
     // Scale the canvas size by the device pixel ratio clamping to the maximum

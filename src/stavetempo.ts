@@ -5,8 +5,7 @@ import { Tables } from './tables';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
-import { FontInfo } from 'types/common';
-import { FontStyle, FontWeight, TextFont } from 'textfont';
+import { FontInfo, FontWeight, FontStyle } from './font';
 
 export interface StaveTempoOptions {
   bpm?: number;
@@ -21,7 +20,7 @@ export class StaveTempo extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: TextFont.SERIF */,
+    family: 'Times' /* RONYEH: Font.SERIF */,
     size: 14,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

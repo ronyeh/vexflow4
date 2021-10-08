@@ -5,11 +5,10 @@
 
 import { RuntimeError } from './util';
 import { Modifier } from './modifier';
-import { FontInfo } from './types/common';
+import { FontInfo, FontWeight, FontStyle } from './font';
 import { StaveNote } from './stavenote';
 import { Builder } from './easyscore';
 import { ModifierContextState } from './modifiercontext';
-import { FontStyle, FontWeight, TextFont } from 'textfont';
 
 export class FretHandFinger extends Modifier {
   static get CATEGORY(): string {
@@ -17,7 +16,7 @@ export class FretHandFinger extends Modifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: TextFont.SANS_SERIF */,
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
     size: 9,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

@@ -3,17 +3,16 @@
 //
 // This class implements multiple measure rests.
 
-import { isBarline } from 'typeguard';
-
+import { defined } from './util';
+import { Tables } from './tables';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { NoteHead } from './notehead';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { StaveModifierPosition } from './stavemodifier';
-import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
-import { defined } from './util';
+import { isBarline } from './typeguard';
 
 export interface MultimeasureRestRenderOptions {
   /** Extracted by Factory.MultiMeasureRest() and passed to the MultiMeasureRest constructor. */

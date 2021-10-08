@@ -9,7 +9,6 @@ import { RenderContext } from 'rendercontext';
 import { ContextBuilder, Renderer } from 'renderer';
 import { Factory } from 'factory';
 import { Font, Fonts } from 'font';
-import { TextFont } from 'textfont';
 
 /* eslint-disable */
 declare const global: any;
@@ -276,7 +275,7 @@ class VexFlowTests {
    */
   static plotLegendForNoteWidth(ctx: RenderContext, x: number, y: number): void {
     ctx.save();
-    ctx.setFont(TextFont.SANS_SERIF, 8);
+    ctx.setFont(Font.SANS_SERIF, 8);
 
     const spacing = 12;
     let lastY = y;

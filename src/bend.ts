@@ -3,8 +3,8 @@
 
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
-import { FontInfo } from 'types/common';
-import { Element } from 'element';
+import { FontInfo } from './font';
+import { Element } from './element';
 
 export interface BendPhrase {
   x?: number;

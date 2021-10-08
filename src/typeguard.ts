@@ -2,11 +2,10 @@
 // Author: Ron B. Yeh
 // MIT License
 
-import { Dot } from 'dot';
-import { GraceNote } from 'gracenote';
-import { GraceNoteGroup } from 'gracenotegroup';
-import { Barline } from 'stavebarline';
-
+import { Dot } from './dot';
+import { GraceNote } from './gracenote';
+import { GraceNoteGroup } from './gracenotegroup';
+import { Barline } from './stavebarline';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
 import { StemmableNote } from './stemmablenote';

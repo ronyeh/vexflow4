@@ -5,8 +5,7 @@ import { RuntimeError } from './util';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Justification, TextNote } from './textnote';
 import { Stave } from './stave';
-import { FontInfo } from 'types/common';
-import { FontStyle, FontWeight, TextFont } from 'textfont';
+import { FontInfo, FontWeight, FontStyle } from './font';
 
 export class StaveText extends StaveModifier {
   static get CATEGORY(): string {
@@ -14,7 +13,7 @@ export class StaveText extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: TextFont.SERIF*/,
+    family: 'Times' /* RONYEH: Font.SERIF*/,
     size: 16,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,

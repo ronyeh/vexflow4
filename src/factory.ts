@@ -355,7 +355,7 @@ export class Factory {
     };
     // TODO: Factory.Annotation has a different default font from new Annotation()...
     const font = {
-      family: 'Times' /* RONYEH: TextFont.SERIF */,
+      family: 'Times' /* RONYEH: Font.SERIF */,
       size: 14,
       weight: FontWeight.BOLD,
       style: FontStyle.ITALIC,
@@ -668,6 +668,11 @@ export class Factory {
     return group;
   }
 
+<<<<<<< HEAD
+=======
+  // RONYEH-FONT deleted Factory.TextFont(params)
+
+>>>>>>> Move general font methods into Font class.
   /** Render the score. */
   draw(): void {
     const ctx = this.context;

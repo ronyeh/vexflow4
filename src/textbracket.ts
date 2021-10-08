@@ -12,9 +12,8 @@ import { Tables } from './tables';
 import { Element } from './element';
 import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
-import { FontInfo } from './types/common';
 import { Note } from './note';
-import { FontStyle, FontWeight, TextFont } from 'textfont';
+import { Font, FontStyle, FontWeight, FontInfo } from './font';
 
 export interface TextBracketParams {
   start: Note;
@@ -43,7 +42,7 @@ export class TextBracket extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'serif' /* RONYEH: TextFont.SERIF */,
+    family: 'serif' /* RONYEH: Font.SERIF */,
     size: 15,
     weight: FontWeight.NORMAL,
     style: FontStyle.ITALIC,
@@ -195,7 +194,7 @@ export class TextBracket extends Element {
     // eslint-disable-next-line
     const { family, size, weight, style } = this.font!;
     // To draw the superscript, we scale the font size by 1/1.4.
-    const smallerFontSize = TextFont.scaleSize(size, 0.714286);
+    const smallerFontSize = Font.scaleSize(size, 0.714286);
     ctx.setFont(family, smallerFontSize, weight, style);
     ctx.fillText(this.superscript, start.x + main_width + 1, super_y);
 

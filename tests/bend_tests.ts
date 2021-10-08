@@ -12,7 +12,7 @@ import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
 import { Note } from 'note';
-import { TextFont } from 'textfont';
+import { Font } from 'font';
 
 const BendTests = {
   Start(): void {
@@ -40,7 +40,7 @@ function doubleBends(options: TestOptions, contextBuilder: ContextBuilder): void
   ctx.scale(1.5, 1.5);
   ctx.fillStyle = '#221';
   ctx.strokeStyle = '#221';
-  ctx.setRawFont('10pt ' + TextFont.SANS_SERIF);
+  ctx.setRawFont('10pt ' + Font.SANS_SERIF);
   const stave = new TabStave(10, 10, 450).addTabGlyph().setContext(ctx).draw();
 
   const notes = [

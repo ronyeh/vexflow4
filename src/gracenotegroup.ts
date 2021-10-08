@@ -5,20 +5,19 @@
 // This file implements `GraceNoteGroup` which is used to format and
 // render grace notes.
 
-import { isStaveNote } from 'typeguard';
-
-import { Beam } from './beam';
-import { Formatter } from './formatter';
+import { log } from './util';
+import { Tables } from './tables';
 import { Modifier } from './modifier';
-import { ModifierContextState } from './modifiercontext';
-import { Note } from './note';
+import { Formatter } from './formatter';
+import { Voice } from './voice';
+import { Beam } from './beam';
 import { RenderContext } from './rendercontext';
 import { StaveTie } from './stavetie';
-import { StemmableNote } from './stemmablenote';
-import { Tables } from './tables';
 import { TabTie } from './tabtie';
-import { log } from './util';
-import { Voice } from './voice';
+import { Note } from './note';
+import { StemmableNote } from './stemmablenote';
+import { ModifierContextState } from './modifiercontext';
+import { isStaveNote } from './typeguard';
 
 // To enable logging for this class. Set `GraceNoteGroup.DEBUG` to `true`.
 // eslint-disable-next-line

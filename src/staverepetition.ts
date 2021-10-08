@@ -3,9 +3,8 @@
 
 import { StaveModifier } from './stavemodifier';
 import { Glyph } from './glyph';
-import { FontInfo } from './types/common';
 import { Stave } from './stave';
-import { FontStyle, FontWeight, TextFont } from 'textfont';
+import { FontInfo, FontWeight, FontStyle } from './font';
 
 export class Repetition extends StaveModifier {
   static get CATEGORY(): string {
@@ -13,7 +12,7 @@ export class Repetition extends StaveModifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: TextFont.SERIF */,
+    family: 'Times' /* RONYEH: Font.SERIF */,
     size: 12,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,

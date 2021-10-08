@@ -4,6 +4,8 @@
 // Formatter Tests
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
+import { MockTickable } from './mocks';
+
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
@@ -16,8 +18,6 @@ import { Stave } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
 import { Voice, VoiceTime } from 'voice';
-import { MockTickable } from './mocks';
-import { TextFont } from 'textfont';
 
 const FormatterTests = {
   Start(): void {
@@ -713,7 +713,7 @@ function annotations(options: TestOptions): void {
           0,
           new Annotation(sm.lyrics[iii])
             .setVerticalJustification(Annotation.VerticalJustify.BOTTOM)
-            .setFont('Times' /* RONYEH: TextFont.SERIF */, 12, 'normal')
+            .setFont('Times' /* RONYEH: Font.SERIF */, 12, 'normal')
         );
       }
       notes.push(note);

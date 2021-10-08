@@ -18,7 +18,7 @@ import { TabStave } from './tabstave';
 import { TabNote } from './tabnote';
 import { BoundingBox } from './boundingbox';
 import { isNote, isStaveNote } from './typeguard';
-import { TextFont } from 'textfont';
+import { Font } from './font';
 
 interface Distance {
   maxNegativeShiftPx: number;
@@ -225,7 +225,7 @@ export class Formatter {
     }
 
     ctx.save();
-    ctx.setFont(TextFont.SANS_SERIF, 8);
+    ctx.setFont(Font.SANS_SERIF, 8);
 
     contextGaps.gaps.forEach((gap) => {
       stroke(x + gap.x1, x + gap.x2, 'rgba(100,200,100,0.4)');

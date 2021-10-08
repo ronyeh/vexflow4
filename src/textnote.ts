@@ -4,8 +4,7 @@
 import { RuntimeError } from './util';
 import { Note, NoteStruct } from './note';
 import { Glyph } from './glyph';
-import { FontInfo } from './types/common';
-import { FontStyle, FontWeight, TextFont } from 'textfont';
+import { Font, FontInfo, FontWeight, FontStyle } from './font';
 
 export enum Justification {
   LEFT = 1,
@@ -35,7 +34,7 @@ export class TextNote extends Note {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: TextFont.SANS_SERIF,
+    family: Font.SANS_SERIF,
     size: 12,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,
@@ -220,7 +219,7 @@ export class TextNote extends Note {
       // eslint-disable-next-line
       const { family, size, weight, style } = this.font!;
       // Scale the font size by 1/1.3.
-      const smallerFontSize = TextFont.scaleSize(size, 0.769231);
+      const smallerFontSize = Font.scaleSize(size, 0.769231);
 
       if (this.superscript) {
         ctx.setFont(family, smallerFontSize, weight, style);

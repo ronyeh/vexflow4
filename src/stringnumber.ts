@@ -8,12 +8,11 @@
 import { RuntimeError } from './util';
 import { Modifier } from './modifier';
 import { Renderer } from './renderer';
-import { FontInfo } from './types/common';
+import { FontInfo, FontWeight, FontStyle, Font } from './font';
 import { Note } from './note';
 import { ModifierContextState } from './modifiercontext';
 import { isStaveNote, isStemmableNote } from './typeguard';
-import { Stem } from 'stem';
-import { FontStyle, FontWeight, TextFont } from 'textfont';
+import { Stem } from './stem';
 
 export class StringNumber extends Modifier {
   static get CATEGORY(): string {
@@ -21,8 +20,8 @@ export class StringNumber extends Modifier {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'sans-serif' /* RONYEH: TextFont.SANS_SERIF */,
-    size: TextFont.SIZE,
+    family: 'sans-serif' /* RONYEH: Font.SANS_SERIF */,
+    size: Font.SIZE,
     weight: FontWeight.BOLD,
     style: FontStyle.NORMAL,
   };

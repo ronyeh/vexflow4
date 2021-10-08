@@ -2,11 +2,12 @@
 // MIT License
 
 import { Tables } from './tables';
-import { Element } from 'element';
+import { Element } from './element';
 import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
+import { TextFormatter } from './textformatter';
 import { log } from './util';
 
 // eslint-disable-next-line
@@ -79,7 +80,7 @@ export class Annotation extends Modifier {
       // Calculate if the vertical extent will exceed a single line and adjust accordingly.
       const numLines = Math.floor(textFormatter.maxHeight / Tables.STAVE_LINE_DISTANCE) + 1;
       // Get the string width from the font metrics
-      testWidth = textFormatter.getWidthForString(annotation.text);
+      testWidth = textFormatter.getWidthForText(annotation.text);
       width = Math.max(width, testWidth);
       if (annotation.getPosition() === Modifier.Position.ABOVE) {
         annotation.setTextLine(state.top_text_line);

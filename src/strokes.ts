@@ -10,8 +10,7 @@ import { Glyph } from './glyph';
 import { Note } from './note';
 import { ModifierContextState } from './modifiercontext';
 import { isNote, isStaveNote, isTabNote } from './typeguard';
-import { FontInfo } from 'types/common';
-import { TextFont } from 'textfont';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 
 export class Stroke extends Modifier {
   static get CATEGORY(): string {
@@ -29,10 +28,10 @@ export class Stroke extends Modifier {
   };
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'serif' /* RONYEH: TextFont.SERIF */,
-    size: TextFont.SIZE,
-    weight: 'bold',
-    style: 'italic',
+    family: 'serif' /* RONYEH: Font.SERIF */,
+    size: Font.SIZE,
+    weight: FontWeight.BOLD,
+    style: FontStyle.ITALIC,
   };
 
   // Arrange strokes inside `ModifierContext`

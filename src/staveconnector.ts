@@ -5,8 +5,8 @@ import { RuntimeError } from './util';
 import { Element } from './element';
 import { Tables } from './tables';
 import { Glyph } from './glyph';
-import { Stave } from './stave';
 import { RenderContext } from './rendercontext';
+import { Stave } from './stave';
 import { FontStyle, FontWeight, FontInfo } from './font';
 
 function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY: number, botY: number) {
@@ -36,7 +36,7 @@ export class StaveConnector extends Element {
   }
 
   static TEXT_FONT: Required<FontInfo> = {
-    family: 'Times' /* RONYEH: TextFont.SERIF */,
+    family: 'Times' /* RONYEH: Font.SERIF */,
     size: 16,
     weight: FontWeight.NORMAL,
     style: FontStyle.NORMAL,
