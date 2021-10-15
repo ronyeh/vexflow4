@@ -668,11 +668,6 @@ export class Factory {
     return group;
   }
 
-<<<<<<< HEAD
-=======
-  // RONYEH-FONT deleted Factory.TextFont(params)
-
->>>>>>> Move general font methods into Font class.
   /** Render the score. */
   draw(): void {
     const ctx = this.context;
