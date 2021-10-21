@@ -11,6 +11,7 @@
 
 import { log } from './util';
 import { Tables } from './tables';
+import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { TextFormatter } from './textformatter';
 import { Modifier } from './modifier';
@@ -111,7 +112,7 @@ export class ChordSymbol extends Modifier {
   }
 
   static get engravingFontResolution(): number {
-    return Tables.MUSIC_FONT_STACK[0].getResolution();
+    return Flow.getMusicFont().getResolution();
   }
 
   static get spacingBetweenBlocks(): number {
@@ -224,7 +225,7 @@ export class ChordSymbol extends Modifier {
 
   // eslint-disable-next-line
   static get metrics(): any {
-    return Tables.MUSIC_FONT_STACK[0].getMetrics().glyphs.chordSymbol;
+    return Flow.getMusicFont().getMetrics().glyphs.chordSymbol;
   }
 
   static get lowerKerningText(): string[] {
@@ -374,7 +375,7 @@ export class ChordSymbol extends Modifier {
    */
   getDefaultFont(): Required<FontInfo> {
     let family = 'Roboto Slab, Times, serif';
-    if (this.musicFont.getName() === 'Petaluma') {
+    if (this.getMusicFont().getName() === 'Petaluma') {
       family = 'PetalumaScript, Arial, sans-serif';
     }
     return {

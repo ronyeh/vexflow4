@@ -4,6 +4,7 @@
 import { RuntimeError, midLine, log, defined } from './util';
 import { Beam } from './beam';
 import { Tables } from './tables';
+import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { Voice } from './voice';
 import { StaveConnector } from './staveconnector';
@@ -18,7 +19,7 @@ import { TabStave } from './tabstave';
 import { TabNote } from './tabnote';
 import { BoundingBox } from './boundingbox';
 import { isNote, isStaveNote } from './typeguard';
-import { Font } from './font';
+import { Font, Fonts } from './font';
 
 interface Distance {
   maxNegativeShiftPx: number;
@@ -209,7 +210,7 @@ export class Formatter {
     options?: { stavePadding: number }
   ): void {
     options = {
-      stavePadding: Tables.MUSIC_FONT_STACK[0].lookupMetric('stave.padding'),
+      stavePadding: Flow.getMusicFont().lookupMetric('stave.padding'),
       ...options,
     };
 
@@ -461,7 +462,7 @@ export class Formatter {
    * @returns the estimated width in pixels
    */
   preCalculateMinTotalWidth(voices: Voice[]): number {
-    const unalignedPadding = Tables.MUSIC_FONT_STACK[0].lookupMetric('stave.unalignedNotePadding');
+    const unalignedPadding = Flow.getMusicFont().lookupMetric('stave.unalignedNotePadding');
     // Calculate additional padding based on 3 methods:
     // 1) unaligned beats in voices, 2) variance of width, 3) variance of durations
     let unalignedCtxCount = 0;
@@ -770,7 +771,7 @@ export class Formatter {
       lastContext.getMetrics().notePx -
       lastContext.getMetrics().totalRightPx -
       firstContext.getMetrics().totalLeftPx;
-    const musicFont = Tables.MUSIC_FONT_STACK[0];
+    const musicFont = Flow.getMusicFont();
     const configMinPadding = musicFont.lookupMetric('stave.endPaddingMin');
     const configMaxPadding = musicFont.lookupMetric('stave.endPaddingMax');
     let targetWidth = adjustedJustifyWidth;
@@ -778,7 +779,7 @@ export class Formatter {
     let actualWidth = shiftToIdealDistances(distances);
     // Calculate right justification by finding max of (configured value, min distance between tickables)
     // so measures with lots of white space use it evenly, and crowded measures use at least the configured
-    // space
+    // space.
     const calcMinDistance = (targetWidth: number, distances: Distance[]) => {
       let mdCalc = targetWidth / 2;
       if (distances.length > 1) {
