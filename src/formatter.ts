@@ -19,7 +19,7 @@ import { TabStave } from './tabstave';
 import { TabNote } from './tabnote';
 import { BoundingBox } from './boundingbox';
 import { isNote, isStaveNote } from './typeguard';
-import { Font, Fonts } from './font';
+import { Font } from './font';
 
 interface Distance {
   maxNegativeShiftPx: number;
