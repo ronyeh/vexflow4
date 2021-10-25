@@ -6,9 +6,9 @@ import { defined } from './util';
 import { Registry } from './registry';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
-import { Tables } from './tables';
 import { RenderContext } from './rendercontext';
 import { FontInfo, FontWeight, FontStyle } from './font';
+import { Flow } from 'flow';
 
 /** Element attributes. */
 export interface ElementAttributes {
@@ -46,7 +46,7 @@ export abstract class Element {
 
   /**
    * Default font for text.
-   * See `Element.musicFontStack` to customize the font for musical symbols placed on the score.
+   * See `Flow.setMusicFont(...fontNames)` to customize the font for musical symbols placed on the score.
    */
   static TEXT_FONT: Required<FontInfo> = {
     family: Font.SANS_SERIF,
@@ -62,10 +62,6 @@ export abstract class Element {
   protected boundingBox?: BoundingBox;
   protected registry?: Registry;
 
-  /** The font stack used to render musical glyphs (e.g., treble clef).*/
-  // Initialized by the constructor via this.setMusicFontStack(...).
-  protected musicFontStack!: Font[];
-
   /** Some elements include text. You can customize the font family, size, weight, and style. */
   protected font?: Required<FontInfo>;
 
@@ -78,7 +74,6 @@ export abstract class Element {
     };
 
     this.rendered = false;
-    this.setMusicFontStack(Tables.MUSIC_FONT_STACK);
 
     // If a default registry exist, then register with it right away.
     Registry.getDefaultRegistry()?.register(this);
@@ -89,26 +84,8 @@ export abstract class Element {
     return (<typeof Element>this.constructor).CATEGORY;
   }
 
-  /**
-   * Set the music engraving fonts. The first item is the default.
-   * Other fonts serve as backups for when a glyph is not found in the first font.
-   *
-   * Note: This method makes a shallow copy of the array, so that future changes to the global
-   * font stack will not affect this element's music font.
-   * TODO/RONYEH: Is this the approach we want to take?
-   */
-  setMusicFontStack(fontStack: Font[]): this {
-    this.musicFontStack = fontStack.slice();
-    return this;
-  }
-
-  /** Get music fonts stack. */
-  getMusicFontStack(): Font[] {
-    return this.musicFontStack.slice();
-  }
-
   getMusicFont(): Font {
-    return this.musicFontStack[0];
+    return Flow.getMusicFont();
   }
 
   /**
