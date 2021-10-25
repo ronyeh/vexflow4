@@ -2,12 +2,12 @@
 // MIT License
 
 import { RuntimeError, log } from './util';
-import { Flow } from './flow';
 import { Element } from './element';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { StaveNote } from './stavenote';
 import { FontStyle, FontWeight, FontInfo, Font } from './font';
+import { Tables } from './tables';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -187,7 +187,7 @@ export class PedalMarking extends Element {
       const prev_is_same = notes[index - 1] === note;
 
       let x_shift = 0;
-      const point = Flow.getMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+      const point = Tables.currentMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
 
       if (is_pedal_depressed) {
         // Adjustment for release+depress
@@ -247,7 +247,7 @@ export class PedalMarking extends Element {
       const x = note.getAbsoluteX();
       const y = stave.getYForBottomText(this.line + 3);
 
-      const point = Flow.getMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
+      const point = Tables.currentMusicFont().lookupMetric(`pedalMarking.${is_pedal_depressed ? 'down' : 'up'}.point`);
 
       let text_width = 0;
       if (is_pedal_depressed) {

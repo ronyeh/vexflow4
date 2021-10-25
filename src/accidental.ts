@@ -68,8 +68,7 @@ export class Accidental extends Modifier {
     // If there are no accidentals, no need to format their positions.
     if (!accidentals || accidentals.length === 0) return;
 
-    const musicFont = Tables.getMusicFont();
-
+    const musicFont = Tables.currentMusicFont();
     const noteheadAccidentalPadding = musicFont.lookupMetric('accidental.noteheadAccidentalPadding');
     const leftShift = state.left_shift + noteheadAccidentalPadding;
     const accidentalSpacing = musicFont.lookupMetric('accidental.accidentalSpacing');

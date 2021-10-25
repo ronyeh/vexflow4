@@ -8,7 +8,6 @@ import { BoundingBox } from './boundingbox';
 import { Font } from './font';
 import { RenderContext } from './rendercontext';
 import { FontInfo, FontWeight, FontStyle } from './font';
-import { Flow } from './flow';
 
 /** Element attributes. */
 export interface ElementAttributes {

@@ -4,7 +4,7 @@ import { GlyphNote } from './glyphnote';
 import { Glyph } from './glyph';
 import { NoteStruct } from './note';
 import { GlyphNoteOptions } from './glyphnote';
-import { Flow } from './flow';
+import { Tables } from './tables';
 
 // Map `type` to SMuFL glyph code.
 const CODES: Record<string, string> = {
@@ -23,7 +23,7 @@ export class RepeatNote extends GlyphNote {
     super(undefined, { duration: 'q', align_center: type !== 'slash', ...noteStruct }, options);
 
     const glyphCode = CODES[type] || 'repeat1Bar';
-    const glyph = new Glyph(glyphCode, Flow.getMusicFont().lookupMetric('repeatNote.point', 40), {
+    const glyph = new Glyph(glyphCode, Tables.currentMusicFont().lookupMetric('repeatNote.point', 40), {
       category: 'repeatNote',
     });
     this.setGlyph(glyph);
