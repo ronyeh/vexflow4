@@ -4,6 +4,7 @@
 
 import { RuntimeError, log, defined } from './util';
 import { Tables } from './tables';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { Glyph } from './glyph';
@@ -154,7 +155,7 @@ export class Ornament extends Modifier {
    */
   // eslint-disable-next-line
   getMetrics(): any {
-    return this.getMusicFont().getMetrics().glyphs.jazzOrnaments[this.ornament.code];
+    return Flow.getMusicFont().getMetrics().glyphs.jazzOrnaments[this.ornament.code];
   }
 
   /**

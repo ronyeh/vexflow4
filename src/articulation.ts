@@ -2,16 +2,17 @@
 // Author: Larry Kuhns.
 // MIT License
 
-import { Builder } from './easyscore';
-import { Glyph } from './glyph';
+import { RuntimeError, log, defined } from './util';
+import { Tables } from './tables';
+import { Flow } from './flow';
 import { Modifier } from './modifier';
-import { ModifierContextState } from './modifiercontext';
+import { Glyph } from './glyph';
+import { Stem } from './stem';
 import { Note } from './note';
 import { StaveNote } from './stavenote';
-import { Stem } from './stem';
-import { Tables } from './tables';
+import { ModifierContextState } from './modifiercontext';
+import { Builder } from './easyscore';
 import { isGraceNote, isStaveNote, isTabNote } from './typeguard';
-import { defined, log, RuntimeError } from './util';
 
 export interface ArticulationStruct {
   code?: string;
@@ -296,7 +297,7 @@ export class Articulation extends Modifier {
 
     const initialOffset = getInitialOffset(note, position);
 
-    const padding = this.getMusicFont().lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
+    const padding = Flow.getMusicFont().lookupMetric(`articulation.${glyph.getCode()}.padding`, 0);
 
     let y = (
       {

@@ -9,7 +9,7 @@ import { RenderContext } from './rendercontext';
 import { TypeProps } from './types/common';
 import { Stave } from './stave';
 import { Stem } from './stem';
-import { Flow } from 'flow';
+import { Flow } from './flow';
 
 export interface DurationCode {
   common: TypeProps;

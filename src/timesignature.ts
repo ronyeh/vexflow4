@@ -8,7 +8,6 @@
 import { Glyph } from './glyph';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { TimeSignatureGlyph } from './timesigglyph';
-import { defined, RuntimeError } from './util';
 
 export interface TimeSignatureInfo {
   glyph: Glyph;
@@ -66,7 +65,7 @@ export class TimeSignature extends StaveModifier {
 
     const padding = customPadding;
 
-    const musicFont = this.getMusicFont();
+    const musicFont = Flow.getMusicFont();
     this.point = musicFont.lookupMetric('digits.point');
     const fontLineShift = musicFont.lookupMetric('digits.shiftLine', 0);
     this.topLine = 2 + fontLineShift;

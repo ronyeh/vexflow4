@@ -2,17 +2,18 @@
 // MIT License
 
 import { Beam } from './beam';
+import { RuntimeError, drawDot, defined } from './util';
+import { Tables } from './tables';
+import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
 import { Stroke } from './strokes';
-import { Tables } from './tables';
 import { Tickable } from './tickable';
 import { TickContext } from './tickcontext';
 import { KeyProps } from './types/common';
-import { defined, drawDot, RuntimeError } from './util';
 import { Voice } from './voice';
 import { Font } from './font';
 
@@ -588,7 +589,7 @@ export abstract class Note extends Tickable {
     // Position note to left edge of tick context.
     let x = tickContext.getX();
     if (this.stave) {
-      x += this.stave.getNoteStartX() + this.getMusicFont().lookupMetric('stave.padding');
+      x += this.stave.getNoteStartX() + Flow.getMusicFont().lookupMetric('stave.padding');
     }
     if (this.isCenterAligned()) {
       x += this.getCenterXShift();

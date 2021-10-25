@@ -8,7 +8,7 @@ import { BoundingBox } from './boundingbox';
 import { Font } from './font';
 import { RenderContext } from './rendercontext';
 import { FontInfo, FontWeight, FontStyle } from './font';
-import { Flow } from 'flow';
+import { Flow } from './flow';
 
 /** Element attributes. */
 export interface ElementAttributes {
@@ -82,10 +82,6 @@ export abstract class Element {
   /** Get element category string. */
   getCategory(): string {
     return (<typeof Element>this.constructor).CATEGORY;
-  }
-
-  getMusicFont(): Font {
-    return Flow.getMusicFont();
   }
 
   /**

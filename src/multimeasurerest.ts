@@ -3,6 +3,7 @@
 //
 // This class implements multiple measure rests.
 
+import { Flow } from './flow';
 import { defined } from './util';
 import { Tables } from './tables';
 import { Element } from './element';
@@ -101,7 +102,7 @@ export class MultiMeasureRest extends Element {
     this.hasLineThickness = typeof options.line_thickness === 'number';
     this.hasSymbolSpacing = typeof options.symbol_spacing === 'number';
 
-    const musicFont = this.getMusicFont();
+    const musicFont = Flow.getMusicFont();
     this.render_options = {
       use_symbols: false,
       show_number: true,

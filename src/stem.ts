@@ -4,10 +4,11 @@
 // This file implements the `Stem` object. Generally this object is handled
 // by its parent `StemmableNote`.
 
-import { BoundingBox } from './boundingbox';
+import { RuntimeError, log } from './util';
 import { Element } from './element';
 import { Tables } from './tables';
-import { log, RuntimeError } from './util';
+import { Flow } from './flow';
+import { BoundingBox } from './boundingbox';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -170,7 +171,7 @@ export class Stem extends Element {
   }
 
   adjustHeightForFlag(): void {
-    this.renderHeightAdjustment = this.getMusicFont().lookupMetric('stem.heightAdjustmentForFlag', -3);
+    this.renderHeightAdjustment = Flow.getMusicFont().lookupMetric('stem.heightAdjustmentForFlag', -3);
   }
 
   adjustHeightForBeam(): void {

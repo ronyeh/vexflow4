@@ -1,15 +1,16 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { BoundingBox } from './boundingbox';
-import { ElementStyle } from './element';
-import { Glyph, GlyphProps } from './glyph';
-import { Note, NoteStruct } from './note';
-import { RenderContext } from './rendercontext';
-import { Stave } from './stave';
-import { Stem } from './stem';
+import { RuntimeError, log, defined } from './util';
 import { Tables } from './tables';
-import { defined, log, RuntimeError } from './util';
+import { Flow } from './flow';
+import { Note, NoteStruct } from './note';
+import { Stem } from './stem';
+import { Glyph, GlyphProps } from './glyph';
+import { RenderContext } from './rendercontext';
+import { BoundingBox } from './boundingbox';
+import { Stave } from './stave';
+import { ElementStyle } from './element';
 
 // eslint-disable-next-line
 function L(...args: any[]) {
@@ -208,7 +209,7 @@ export class NoteHead extends Note {
     // For a more natural displaced notehead, we adjust the displacement amount
     // by half the stem width in order to maintain a slight overlap with the stem
     const displacementStemAdjustment = Stem.WIDTH / 2;
-    const musicFont = this.getMusicFont();
+    const musicFont = Flow.getMusicFont();
     const fontShift = musicFont.lookupMetric('notehead.shiftX', 0) * this.stem_direction;
     const displacedFontShift = musicFont.lookupMetric('noteHead.displaced.shiftX', 0) * this.stem_direction;
 
