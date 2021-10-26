@@ -11,7 +11,6 @@
 
 import { log } from './util';
 import { Tables } from './tables';
-import { Flow } from './flow';
 import { Glyph } from './glyph';
 import { TextFormatter } from './textformatter';
 import { Modifier } from './modifier';
@@ -376,7 +375,13 @@ export class ChordSymbol extends Modifier {
   getDefaultFont(): Required<FontInfo> {
     let family = 'Roboto Slab, Times, serif';
     if (Tables.currentMusicFont().getName() === 'Petaluma') {
-      family = 'PetalumaScript, Arial, sans-serif';
+      // Fixes Issue #1180
+      // https://github.com/0xfe/vexflow/issues/1180
+      // family = 'PetalumaScript, Arial, sans-serif';
+
+      // RONYEH-FONT: A mismatched font family results in loading Roboto Slab's metrics instead.
+      // DELETE THE FOLLOWING LINE AND RESTORE THE ONE ABOVE.
+      family = 'petalumaScript,Arial';
     }
     return {
       family,

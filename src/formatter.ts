@@ -4,7 +4,6 @@
 import { RuntimeError, midLine, log, defined } from './util';
 import { Beam } from './beam';
 import { Tables } from './tables';
-import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { Voice } from './voice';
 import { StaveConnector } from './staveconnector';

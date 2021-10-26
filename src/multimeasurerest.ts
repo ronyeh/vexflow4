@@ -3,7 +3,6 @@
 //
 // This class implements multiple measure rests.
 
-import { Flow } from './flow';
 import { defined } from './util';
 import { Tables } from './tables';
 import { Element } from './element';

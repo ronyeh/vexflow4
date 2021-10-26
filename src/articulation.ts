@@ -4,7 +4,6 @@
 
 import { RuntimeError, log, defined } from './util';
 import { Tables } from './tables';
-import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { Stem } from './stem';

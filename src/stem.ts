@@ -7,7 +7,6 @@
 import { RuntimeError, log } from './util';
 import { Element } from './element';
 import { Tables } from './tables';
-import { Flow } from './flow';
 import { BoundingBox } from './boundingbox';
 
 // eslint-disable-next-line

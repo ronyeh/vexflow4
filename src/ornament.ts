@@ -4,7 +4,6 @@
 
 import { RuntimeError, log, defined } from './util';
 import { Tables } from './tables';
-import { Flow } from './flow';
 import { Modifier } from './modifier';
 import { TickContext } from './tickcontext';
 import { Glyph } from './glyph';

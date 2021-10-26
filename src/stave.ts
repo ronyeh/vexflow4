@@ -18,7 +18,6 @@ import { StaveText } from './stavetext';
 import { Volta } from './stavevolta';
 import { TimeSignature } from './timesignature';
 import { RuntimeError } from './util';
-import { Flow } from './flow';
 
 export interface StaveLineConfig {
   visible?: boolean;

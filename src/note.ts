@@ -4,7 +4,6 @@
 import { Beam } from './beam';
 import { RuntimeError, drawDot, defined } from './util';
 import { Tables } from './tables';
-import { Flow } from './flow';
 import { Fraction } from './fraction';
 import { GlyphProps } from './glyph';
 import { Modifier } from './modifier';

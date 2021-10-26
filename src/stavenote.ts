@@ -24,7 +24,6 @@ import { Stave } from './stave';
 import { Note, NoteStruct } from './note';
 import { ModifierContextState } from './modifiercontext';
 import { Accidental } from './accidental';
-import { Flow } from './flow';
 
 export interface StaveNoteHeadBounds {
   y_top: number;

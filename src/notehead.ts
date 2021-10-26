@@ -3,7 +3,6 @@
 
 import { RuntimeError, log, defined } from './util';
 import { Tables } from './tables';
-import { Flow } from './flow';
 import { Note, NoteStruct } from './note';
 import { Stem } from './stem';
 import { Glyph, GlyphProps } from './glyph';
