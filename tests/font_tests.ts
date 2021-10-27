@@ -4,11 +4,13 @@
 // Font Tests
 
 import { Bend } from 'bend';
+import { CanvasContext } from 'canvascontext';
 import { Flow } from 'flow';
 import { Font, FontStyle, FontWeight } from 'font';
 import { StaveNote } from 'stavenote';
 import { TextBracket } from 'textbracket';
 import { TextNote } from 'textnote';
+import { Voice } from 'voice';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
@@ -25,10 +27,24 @@ const FontTests = {
   },
 };
 
+/**
+ * Test out the setFont method in various classes.
+ */
 function setFont(): void {
-  // create a context and call setFont on it...
-  // XXXX
-  equal(true, true);
+  // Create a CanvasCntext and call setFont on it.
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 400;
+  const ctx = new CanvasContext(canvas.getContext('2d') as CanvasRenderingContext2D);
+  ctx.setFont('PetalumaScript', '100px', 'bold');
+  equal(ctx.font, 'bold 100px PetalumaScript');
+
+  // Not all elements render text. By default the font is `undefined`.
+  const voice = new Voice();
+  equal(voice.getFont(), undefined);
+  // But we can set the font for fun.
+  voice.setFont('bold 32pt Arial'); // RONYEH OOPS: BUGGY??
+  console.log(voice.font); // RONYEH OOPS: BUGGY??
 }
 
 function fontParsing(): void {
