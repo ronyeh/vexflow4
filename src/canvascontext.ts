@@ -2,7 +2,7 @@
 // MIT License
 
 import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
-import { Font, FontInfo } from './font';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { warn } from './util';
 
 /**
@@ -27,7 +27,11 @@ export class CanvasContext extends RenderContext {
     return 32767; // Chrome/Firefox. Could be determined more precisely by npm module canvas-size.
   }
 
-  static SanitizeCanvasDims(width: number, height: number): [number, number] {
+  /**
+   * Ensure that width and height do not exceed the browser limit.
+   * @returns array of [width, height] clamped to the browser limit.
+   */
+  static sanitizeCanvasDims(width: number, height: number): [number, number] {
     const limit = this.CANVAS_BROWSER_SIZE_LIMIT;
     if (Math.max(width, height) > limit) {
       warn('Canvas dimensions exceed browser limit. Cropping to ' + limit);
@@ -41,9 +45,6 @@ export class CanvasContext extends RenderContext {
     return [width, height];
   }
 
-  /**
-   * @param context
-   */
   constructor(context: CanvasRenderingContext2D) {
     super();
     this.context2D = context;
@@ -57,6 +58,9 @@ export class CanvasContext extends RenderContext {
     }
   }
 
+  /**
+   * Set all pixels to transparent black rgba(0,0,0,0).
+   */
   clear(): void {
     this.context2D.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
@@ -84,18 +88,18 @@ export class CanvasContext extends RenderContext {
    */
   setFont(
     f: string | FontInfo = Font.SANS_SERIF,
-    size: string | number = 10,
-    weight: string | number = 'normal',
-    style: string = 'normal'
+    size: string | number = Font.SIZE,
+    weight: string | number = FontWeight.NORMAL,
+    style: string = FontStyle.NORMAL
   ): this {
     let family;
     if (typeof f === 'string') {
       family = f;
     } else {
       family = f.family ?? Font.SANS_SERIF;
-      size = f.size ?? 10;
-      weight = f.weight ?? 'normal';
-      style = f.style ?? 'normal';
+      size = f.size ?? Font.SIZE;
+      weight = f.weight ?? FontWeight.NORMAL;
+      style = f.style ?? FontStyle.NORMAL;
     }
 
     this.textHeight = Font.convertToPixels(size);
@@ -177,9 +181,8 @@ export class CanvasContext extends RenderContext {
     const canvasElement = this.context2D.canvas;
     const devicePixelRatio = window.devicePixelRatio || 1;
 
-    // Scale the canvas size by the device pixel ratio clamping to the maximum
-    // supported size.
-    [width, height] = CanvasContext.SanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
+    // Scale the canvas size by the device pixel ratio clamping to the maximum supported size.
+    [width, height] = CanvasContext.sanitizeCanvasDims(width * devicePixelRatio, height * devicePixelRatio);
 
     // Divide back down by the pixel ratio and convert to integers.
     width = (width / devicePixelRatio) | 0;
