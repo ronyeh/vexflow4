@@ -2,11 +2,11 @@
 // Author: Mike Corrigan <corrigan@gmail.com>
 // MIT License
 
-import { Tables } from './tables';
-import { Modifier } from './modifier';
 import { Glyph } from './glyph';
 import { GraceNote } from './gracenote';
+import { Modifier } from './modifier';
 import { Stem } from './stem';
+import { Tables } from './tables';
 import { isGraceNote } from './typeguard';
 
 /** Tremolo implements tremolo notation. */

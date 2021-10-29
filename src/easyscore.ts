@@ -5,15 +5,15 @@ import { Accidental } from './accidental';
 import { Articulation } from './articulation';
 import { Factory } from './factory';
 import { FretHandFinger } from './frethandfinger';
-import { Grammar, Parser, Match, Result, Rule, RuleFunction } from './parser';
-import { RenderContext } from './rendercontext';
-import { RuntimeError, log, defined } from './util';
-import { Note } from './note';
-import { StaveNote } from './stavenote';
-import { TupletOptions } from './tuplet';
-import { Voice } from './voice';
 import { Music } from './music';
+import { Note } from './note';
+import { Grammar, Match, Parser, Result, Rule, RuleFunction } from './parser';
+import { RenderContext } from './rendercontext';
+import { StaveNote } from './stavenote';
 import { Stem } from './stem';
+import { TupletOptions } from './tuplet';
+import { defined, log, RuntimeError } from './util';
+import { Voice } from './voice';
 
 // To enable logging for this class. Set `Vex.Flow.EasyScore.DEBUG` to `true`.
 // eslint-disable-next-line

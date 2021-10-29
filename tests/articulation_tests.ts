@@ -6,6 +6,7 @@
 import { Articulation } from 'articulation';
 import { Beam } from 'beam';
 import { Flow } from 'flow';
+import { Font } from 'font';
 import { Formatter } from 'formatter';
 import { ContextBuilder } from 'renderer';
 import { Stave } from 'stave';
@@ -14,7 +15,6 @@ import { StaveNote } from 'stavenote';
 import { TabNote } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { Voice } from 'voice';
-import { Font } from 'font';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

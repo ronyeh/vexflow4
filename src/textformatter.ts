@@ -1,7 +1,7 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 //
 
-import { Font, FontInfo, FontGlyph, FontWeight, FontStyle } from './font';
+import { Font, FontGlyph, FontInfo, FontStyle, FontWeight } from './font';
 import { log } from './util';
 
 export interface TextFormatterInfo extends Record<string, unknown> {

@@ -1,9 +1,9 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 
-import { GlyphNote } from './glyphnote';
 import { Glyph } from './glyph';
-import { NoteStruct } from './note';
+import { GlyphNote } from './glyphnote';
 import { GlyphNoteOptions } from './glyphnote';
+import { NoteStruct } from './note';
 import { Tables } from './tables';
 
 // Map `type` to SMuFL glyph code.

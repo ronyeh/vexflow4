@@ -2,9 +2,7 @@
 // @author Mohit Cheppudira
 // MIT License
 
-import { RuntimeError, log, defined } from './util';
 import { Accidental } from './accidental';
-import { Articulation } from './articulation';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
 import { BarNote } from './barnote';
@@ -14,6 +12,7 @@ import { ClefNote } from './clefnote';
 import { Curve, CurveOptions } from './curve';
 import { EasyScore, EasyScoreOptions } from './easyscore';
 import { Element } from './element';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Formatter, FormatterOptions } from './formatter';
 import { FretHandFinger } from './frethandfinger';
 import { GhostNote } from './ghostnote';
@@ -31,39 +30,25 @@ import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
 import { RepeatNote } from './repeatnote';
 import { Stave, StaveOptions } from './stave';
-import { StaveTie } from './stavetie';
+import { BarlineType } from './stavebarline';
+import { StaveConnector } from './staveconnector';
 import { StaveLine } from './staveline';
 import { StaveNote, StaveNoteStruct } from './stavenote';
-import { GlyphNote, GlyphNoteOptions } from './glyphnote';
-import { RepeatNote } from './repeatnote';
-import { StaveConnector } from './staveconnector';
+import { StaveTie } from './stavetie';
+import { StemmableNote } from './stemmablenote';
+import { StringNumber } from './stringnumber';
 import { System, SystemOptions } from './system';
-import { TickContext } from './tickcontext';
-import { Tuplet, TupletOptions } from './tuplet';
-import { Voice, VoiceTime } from './voice';
-import { Beam } from './beam';
-import { Curve, CurveOptions } from './curve';
-import { GraceNote, GraceNoteStruct } from './gracenote';
-import { GraceNoteGroup } from './gracenotegroup';
-import { NoteSubGroup } from './notesubgroup';
-import { EasyScore, EasyScoreOptions } from './easyscore';
-import { TimeSigNote } from './timesignote';
-import { KeySigNote } from './keysignote';
-import { ClefNote } from './clefnote';
-import { PedalMarking } from './pedalmarking';
-import { TextBracket } from './textbracket';
-import { VibratoBracket } from './vibratobracket';
-import { GhostNote } from './ghostnote';
-import { BarNote } from './barnote';
 import { TabNote, TabNoteStruct } from './tabnote';
 import { TabStave } from './tabstave';
+import { TextBracket } from './textbracket';
+import { TextDynamics } from './textdynamics';
 import { TextNote, TextNoteStruct } from './textnote';
-import { FontInfo, FontWeight, FontStyle } from './font';
-import { Note, NoteStruct } from './note';
-import { Glyph } from './glyph';
-import { BarlineType } from './stavebarline';
-import { StemmableNote } from './stemmablenote';
-import { Element } from './element';
+import { TickContext } from './tickcontext';
+import { TimeSigNote } from './timesignote';
+import { Tuplet, TupletOptions } from './tuplet';
+import { defined, log, RuntimeError } from './util';
+import { VibratoBracket } from './vibratobracket';
+import { Voice, VoiceTime } from './voice';
 
 export interface FactoryOptions {
   stave?: {

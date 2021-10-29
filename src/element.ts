@@ -2,12 +2,12 @@
 // @author Mohit Cheppudira
 // MIT License
 
-import { defined } from './util';
-import { Registry } from './registry';
 import { BoundingBox } from './boundingbox';
 import { Font } from './font';
+import { FontInfo, FontStyle, FontWeight } from './font';
+import { Registry } from './registry';
 import { RenderContext } from './rendercontext';
-import { FontInfo, FontWeight, FontStyle } from './font';
+import { defined } from './util';
 
 /** Element attributes. */
 export interface ElementAttributes {

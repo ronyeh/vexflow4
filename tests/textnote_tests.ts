@@ -6,8 +6,8 @@
 import { Crescendo } from 'crescendo';
 import { Flow } from 'flow';
 import { Note } from 'note';
-import { TextNote } from 'textnote';
 import { Stave } from 'stave';
+import { TextNote } from 'textnote';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

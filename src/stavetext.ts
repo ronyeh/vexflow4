@@ -1,11 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Taehoon Moon 2014
 
-import { RuntimeError } from './util';
+import { FontInfo, FontStyle, FontWeight } from './font';
+import { Stave } from './stave';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
 import { Justification, TextNote } from './textnote';
-import { Stave } from './stave';
-import { FontInfo, FontWeight, FontStyle } from './font';
+import { RuntimeError } from './util';
 
 export class StaveText extends StaveModifier {
   static get CATEGORY(): string {

@@ -7,13 +7,13 @@
 // The octave transposition markings (8va, 8vb, 15va, 15vb) can be created
 // using this class.
 
-import { RuntimeError, log } from './util';
-import { Tables } from './tables';
 import { Element } from './element';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
+import { Note } from './note';
 import { RenderContext } from './rendercontext';
 import { Renderer } from './renderer';
-import { Note } from './note';
-import { Font, FontStyle, FontWeight, FontInfo } from './font';
+import { Tables } from './tables';
+import { log, RuntimeError } from './util';
 
 export interface TextBracketParams {
   start: Note;

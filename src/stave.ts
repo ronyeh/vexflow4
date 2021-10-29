@@ -1,13 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Bounds } from './types/common';
-import { FontInfo, FontStyle, FontWeight } from './font';
-import { isBarline } from './typeguard';
 import { BoundingBox } from './boundingbox';
 import { Clef } from './clef';
 import { Element, ElementStyle } from './element';
-import { Tables } from './tables';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { KeySignature } from './keysignature';
 import { Barline, BarlineType } from './stavebarline';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
@@ -16,7 +13,10 @@ import { StaveSection } from './stavesection';
 import { StaveTempo, StaveTempoOptions } from './stavetempo';
 import { StaveText } from './stavetext';
 import { Volta } from './stavevolta';
+import { Tables } from './tables';
 import { TimeSignature } from './timesignature';
+import { isBarline } from './typeguard';
+import { Bounds } from './types/common';
 import { RuntimeError } from './util';
 
 export interface StaveLineConfig {

@@ -44,7 +44,7 @@ function setFont(): void {
   equal(voice.getFont(), undefined);
   // But we can set the font for fun.
   voice.setFont('bold 32pt Arial'); // RONYEH OOPS: BUGGY??
-  console.log(voice.font); // RONYEH OOPS: BUGGY??
+  //console.log(voice.font); // RONYEH OOPS: BUGGY??
 }
 
 function fontParsing(): void {

@@ -3,12 +3,13 @@
 //
 // VexFlow Test Support Library
 
+import { Factory } from 'factory';
 import { Flow } from 'flow';
-import { Assert } from './types/qunit';
+import { Font } from 'font';
 import { RenderContext } from 'rendercontext';
 import { ContextBuilder, Renderer } from 'renderer';
-import { Factory } from 'factory';
-import { Font } from 'font';
+
+import { Assert } from './types/qunit';
 
 /* eslint-disable */
 declare const global: any;

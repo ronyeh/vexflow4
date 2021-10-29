@@ -1,11 +1,11 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // Author Radosaw Eichler 2012
 
-import { Tables } from './tables';
-import { StaveModifier, StaveModifierPosition } from './stavemodifier';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { Stave } from './stave';
-import { FontInfo, FontWeight, FontStyle } from './font';
+import { StaveModifier, StaveModifierPosition } from './stavemodifier';
+import { Tables } from './tables';
 
 export interface StaveTempoOptions {
   bpm?: number;

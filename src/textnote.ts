@@ -1,10 +1,10 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
-import { Note, NoteStruct } from './note';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
-import { Font, FontInfo, FontWeight, FontStyle } from './font';
+import { Note, NoteStruct } from './note';
+import { RuntimeError } from './util';
 
 export enum Justification {
   LEFT = 1,

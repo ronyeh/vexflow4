@@ -5,8 +5,8 @@
 import { Dot } from './dot';
 import { GraceNote } from './gracenote';
 import { GraceNoteGroup } from './gracenotegroup';
-import { Barline } from './stavebarline';
 import { Note } from './note';
+import { Barline } from './stavebarline';
 import { StaveNote } from './stavenote';
 import { StemmableNote } from './stemmablenote';
 import { TabNote } from './tabnote';
