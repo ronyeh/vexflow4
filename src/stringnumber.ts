@@ -5,14 +5,14 @@
 // This file implements the `StringNumber` class which renders string
 // number annotations beside notes.
 
-import { RuntimeError } from './util';
+import { Font, FontInfo, FontStyle, FontWeight } from './font';
 import { Modifier } from './modifier';
-import { Renderer } from './renderer';
-import { FontInfo, FontWeight, FontStyle, Font } from './font';
-import { Note } from './note';
 import { ModifierContextState } from './modifiercontext';
-import { isStaveNote, isStemmableNote } from './typeguard';
+import { Note } from './note';
+import { Renderer } from './renderer';
 import { Stem } from './stem';
+import { isStaveNote, isStemmableNote } from './typeguard';
+import { RuntimeError } from './util';
 
 export class StringNumber extends Modifier {
   static get CATEGORY(): string {

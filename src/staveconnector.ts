@@ -1,13 +1,13 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { RuntimeError } from './util';
 import { Element } from './element';
-import { Tables } from './tables';
+import { FontInfo, FontStyle, FontWeight } from './font';
 import { Glyph } from './glyph';
 import { RenderContext } from './rendercontext';
 import { Stave } from './stave';
-import { FontStyle, FontWeight, FontInfo } from './font';
+import { Tables } from './tables';
+import { RuntimeError } from './util';
 
 function drawBoldDoubleLine(ctx: RenderContext, type: number, topX: number, topY: number, botY: number) {
   if (type !== StaveConnector.type.BOLD_DOUBLE_LEFT && type !== StaveConnector.type.BOLD_DOUBLE_RIGHT) {

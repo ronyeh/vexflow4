@@ -5,11 +5,11 @@
 // See tables.js for the internal time signatures
 // representation
 
-import { RuntimeError, defined } from './util';
 import { Glyph } from './glyph';
 import { StaveModifier, StaveModifierPosition } from './stavemodifier';
-import { TimeSignatureGlyph } from './timesigglyph';
 import { Tables } from './tables';
+import { TimeSignatureGlyph } from './timesigglyph';
+import { defined, RuntimeError } from './util';
 
 export interface TimeSignatureInfo {
   glyph: Glyph;

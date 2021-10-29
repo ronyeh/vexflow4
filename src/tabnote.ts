@@ -7,17 +7,17 @@
 //
 // See `tests/tabnote_tests.ts` for usage examples.
 
-import { isDot } from './typeguard';
 import { Dot } from './dot';
-import { Tables } from './tables';
+import { Font } from './font';
 import { Glyph, GlyphProps } from './glyph';
 import { Modifier } from './modifier';
 import { Stave } from './stave';
 import { StaveNoteStruct } from './stavenote';
 import { Stem } from './stem';
 import { StemmableNote } from './stemmablenote';
+import { Tables } from './tables';
+import { isDot } from './typeguard';
 import { defined, RuntimeError } from './util';
-import { Font } from './font';
 
 export interface TabNotePosition {
   // For example, on a six stringed instrument, `str` ranges from 1 to 6.

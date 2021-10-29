@@ -3,23 +3,23 @@
 //
 // Formatter Tests
 
-import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
-import { MockTickable } from './mocks';
-
 import { Annotation } from 'annotation';
 import { Beam } from 'beam';
 import { Bend } from 'bend';
 import { Flow } from 'flow';
-import { Tables } from 'tables';
 import { FontGlyph, FontWeight } from 'font';
+import { Font } from 'font';
 import { Formatter } from 'formatter';
 import { Note } from 'note';
 import { Registry } from 'registry';
 import { Stave } from 'stave';
 import { StaveConnector } from 'staveconnector';
 import { StaveNote } from 'stavenote';
+import { Tables } from 'tables';
 import { Voice, VoiceTime } from 'voice';
-import { Font } from 'font';
+
+import { MockTickable } from './mocks';
+import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 
 const FormatterTests = {
   Start(): void {

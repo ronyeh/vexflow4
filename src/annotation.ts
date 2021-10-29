@@ -1,12 +1,12 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { Tables } from './tables';
 import { Element } from './element';
 import { FontInfo } from './font';
 import { Modifier } from './modifier';
 import { ModifierContextState } from './modifiercontext';
 import { StemmableNote } from './stemmablenote';
+import { Tables } from './tables';
 import { TextFormatter } from './textformatter';
 import { log } from './util';
 

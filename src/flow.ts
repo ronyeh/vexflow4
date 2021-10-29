@@ -1,8 +1,8 @@
-import { Tables } from './tables';
+import { loadMusicFonts } from '@loadFonts';
+
 import { Accidental } from './accidental';
 import { Annotation } from './annotation';
 import { Articulation } from './articulation';
-import { Barline } from './stavebarline';
 import { BarNote } from './barnote';
 import { Beam } from './beam';
 import { Bend } from './bend';
@@ -18,6 +18,7 @@ import { EasyScore } from './easyscore';
 import { Element } from './element';
 import { Factory } from './factory';
 import { Font } from './font';
+import { loadTextFonts } from './fonts/loadTextFonts';
 import { Formatter } from './formatter';
 import { Fraction } from './fraction';
 import { FretHandFinger } from './frethandfinger';
@@ -41,23 +42,26 @@ import { Ornament } from './ornament';
 import { Parser } from './parser';
 import { PedalMarking } from './pedalmarking';
 import { Registry } from './registry';
-import { Renderer } from './renderer';
 import { RenderContext } from './rendercontext';
+import { Renderer } from './renderer';
 import { RepeatNote } from './repeatnote';
-import { Repetition } from './staverepetition';
 import { Stave } from './stave';
+import { Barline } from './stavebarline';
 import { StaveConnector } from './staveconnector';
 import { StaveHairpin } from './stavehairpin';
 import { StaveLine } from './staveline';
 import { StaveModifier } from './stavemodifier';
 import { StaveNote } from './stavenote';
+import { Repetition } from './staverepetition';
 import { StaveTempo } from './stavetempo';
 import { StaveText } from './stavetext';
 import { StaveTie } from './stavetie';
+import { Volta } from './stavevolta';
 import { Stem } from './stem';
 import { StringNumber } from './stringnumber';
 import { Stroke } from './strokes';
 import { System } from './system';
+import { Tables } from './tables';
 import { TabNote } from './tabnote';
 import { TabSlide } from './tabslide';
 import { TabStave } from './tabstave';
@@ -75,9 +79,6 @@ import { Tuplet } from './tuplet';
 import { Vibrato } from './vibrato';
 import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
-import { Volta } from './stavevolta';
-import { loadMusicFonts } from '@loadFonts';
-import { loadTextFonts } from './fonts/loadTextFonts';
 
 export const Flow = {
   Accidental,

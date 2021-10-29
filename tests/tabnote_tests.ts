@@ -4,6 +4,7 @@
 // TabNote Tests
 
 import { Flow } from 'flow';
+import { Font } from 'font';
 import { Formatter } from 'formatter';
 import { RenderContext } from 'rendercontext';
 import { ContextBuilder } from 'renderer';
@@ -12,7 +13,6 @@ import { TabNote, TabNoteStruct } from 'tabnote';
 import { TabStave } from 'tabstave';
 import { TickContext } from 'tickcontext';
 import { Voice, VoiceMode } from 'voice';
-import { Font } from 'font';
 
 import { TestOptions, VexFlowTests } from './vexflow_test_helpers';
 

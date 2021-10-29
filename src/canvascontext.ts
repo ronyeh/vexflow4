@@ -1,8 +1,8 @@
 // [VexFlow](http://vexflow.com) - Copyright (c) Mohit Muthanna 2010.
 // MIT License
 
-import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { Font, FontInfo } from './font';
+import { GroupAttributes, RenderContext, TextMeasure } from './rendercontext';
 import { warn } from './util';
 
 /**
