@@ -8,13 +8,17 @@
 // It also overrides the `Flow.setMusicFont(...)` function to be async, which allows
 // other music fonts (e.g., Bravura) to be loaded on the fly.
 
-import { Vex } from './vexflow-core';
+import { Vex } from '../src/vex';
 
 import { Flow } from '../src/flow';
+import { loadCustom } from '../src/fonts/load_custom';
 import { loadGonville } from '../src/fonts/load_gonville';
+import { loadTextFonts } from '../src/fonts/textfonts';
 
 loadGonville();
-Flow.setMusicFont('Gonville');
+loadCustom();
+Flow.setMusicFont('Gonville', 'Custom');
+loadTextFonts();
 
 export * from '../src/index';
 export default Vex;
