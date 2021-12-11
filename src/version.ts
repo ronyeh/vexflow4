@@ -1,3 +1,3 @@
 export const VERSION: string = '4.0.0';
-export const BUILD: string = '8526732110cb6f2fb843ec54a99809bb161b91f0';
-export const DATE: string = '2021-12-10T22:57:36.968Z';
+export const BUILD: string = '4ae9441e022a92ac0d1829d01d26fc058b6babdf';
+export const DATE: string = '2021-12-11T00:08:13.289Z';
