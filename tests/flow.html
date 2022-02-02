@@ -77,13 +77,15 @@
         const version = ver.split('@')[1];
         if (parseFloat(version) < 4) {
           isVersionFourOrNewer = false;
-          vexURL = `${cdnURLPath}vexflow@${version}/releases/vexflow-debug.js`;
-          testsURL = `${cdnURLPath}vexflow@${version}/releases/vexflow-tests.js`;
+          cdnURLPath += `vexflow@${version}/releases/`;
+          testsURL = cdnURLPath + 'vexflow-tests.js';
         } else {
           // VexFlow 4 moved the build output from releases/ to build/.
-          vexURL = `${cdnURLPath}vexflow@${version}/build/vexflow-debug.js`;
-          vexPlusTestsURL = `${cdnURLPath}vexflow@${version}/build/vexflow-debug-with-tests.js`;
+          // https://unpkg.com/vexflow@4.0.1-alpha.2/build/cjs/vexflow-debug-with-tests.js
+          cdnURLPath += `vexflow@${version}/build/cjs/`;
+          vexPlusTestsURL = cdnURLPath + `vexflow-debug-with-tests.js`;
         }
+        vexURL = cdnURLPath + 'vexflow-debug.js';
       } else {
         // We are NOT loading from a CDN.
         // We are loading from the local filesystem (vexflow/build/ | vexflow/reference | vexflow/releases/).
