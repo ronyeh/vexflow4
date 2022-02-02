@@ -145,11 +145,26 @@
       // The QUnit module drop down box doesn't appear if Vex.Flow.Test.runTests() runs too late.
       await loadScript('support/qunit.js');
 
+      if (location.hash.length > 0) {
+        const hashParams = new URLSearchParams(location.hash.substr(1));
+        if (hashParams.has('filter')) {
+          QUnit.config.filter = hashParams.get('filter');
+          console.log('FILTER OVERRIDE!');
+        }
+      }
+
+      // QUnit.config.filter = 'Beamed Tuplet';
       // Show only failed tests.
       QUnit.config.hidepassed = true;
       QUnit.config.noglobals = true;
 
       VF.Test.run();
+
+      // function locationHashChanged() {
+      //   console.log(location.hash);
+      // }
+
+      // window.onhashchange = locationHashChanged;
     </script>
   </body>
 </html>

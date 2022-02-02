@@ -322,6 +322,7 @@
       config.testId.push(urlParams.testId[i]);
     }
   }
+  console.log("config.testId", config.testId); // RONYEH
 
   var loggingCallbacks = {};
 
@@ -1072,11 +1073,14 @@
         module = QUnit.urlParams.module && QUnit.urlParams.module.toLowerCase(),
         fullName = (this.module.name + ': ' + this.testName).toLowerCase();
 
+      console.log(QUnit.urlParams); // RONYEH
+
       // Internally-generated tests are always valid
       if (this.callback && this.callback.validTest) {
         return true;
       }
 
+      console.log("this.testId", this.testId); // RONYEH
       if (config.testId.length > 0 && inArray(this.testId, config.testId) < 0) {
         return false;
       }
@@ -1138,6 +1142,7 @@ This method will throw an error in 2.0, and will be removed in 2.1
   // Based on Java's String.hashCode, a simple but not
   // rigorously collision resistant hashing function
   function generateHash(module, testName) {
+    console.log("generateHash(module, testName)", module, testName);
     var hex,
       i = 0,
       hash = 0,

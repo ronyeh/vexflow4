@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path, { dirname } from 'path';
@@ -22,8 +20,23 @@ if (versionsRequested.length === 0) {
   console.log('Example: node get_releases.mjs 3.0.9');
   process.exit(1);
 }
-const versions3OrEarlier = versionsRequested.filter((ver) => parseFloat(ver) < 4.0);
-const versions4OrLater = versionsRequested.filter((ver) => parseFloat(ver) >= 4.0);
+const versionsWithCommitID = [];
+const versions3OrEarlier = [];
+const versions4OrLater = [];
+
+versionsRequested.forEach((versionString) => {
+  if (versionString.length === 40) {
+    // This is a git commit ID.
+    versionsWithCommitID.push(versionString);
+  } else {
+    const versionNumber = parseFloat(versionString);
+    if (versionNumber < 4.0) {
+      versions3OrEarlier.push(versionString);
+    } else {
+      versions4OrLater.push(versionString);
+    }
+  }
+});
 
 // Helper function for the command line interface.
 const pressAnyKeyToProceed = async () => {
@@ -47,9 +60,13 @@ const pressAnyKeyToProceed = async () => {
   );
 };
 
-console.log('Check out release files for the following versions?');
-for (const ver of versionsRequested) {
+console.log('Check out files for the following versions?');
+const versionsRequestedWithoutCommitIDs = [...versions3OrEarlier, ...versions4OrLater];
+for (const ver of versionsRequestedWithoutCommitIDs) {
   console.log('    ' + ver + ' --> ' + path.join(RELEASES_DIR, ver, '/'));
+}
+for (const ver of versionsWithCommitID) {
+  console.log('    ' + ver + ' --> ' + path.join(RELEASES_DIR, 'commit_' + ver, '/'));
 }
 
 console.log('\nPress any key to proceed. Press Q or CTRL+C to quit.\n');
@@ -63,7 +80,7 @@ function createTargetDirs() {
     fs.mkdirSync(RELEASES_DIR);
   }
 
-  versionsRequested.forEach((ver) => {
+  versionsRequestedWithoutCommitIDs.forEach((ver) => {
     const targetDir = path.join(RELEASES_DIR, ver);
     if (!fs.existsSync(targetDir)) {
       console.log(`mkdir releases/${ver}/ --> ${targetDir}`);
@@ -79,6 +96,26 @@ function createTargetDirs() {
   });
 }
 createTargetDirs();
+
+// For versions with commit ID, we create a git worktree.
+async function getVersionsWithCommitID() {
+  const worktrees = [];
+
+  console.log('\nCreating temporary worktrees for versions:', versionsWithCommitID);
+  for (const ver of versionsWithCommitID) {
+    const worktreePath = path.join(RELEASES_DIR, 'commit_' + ver);
+    worktrees.push(worktreePath);
+
+    if (fs.existsSync(worktreePath)) {
+      console.log('Removing existing worktree:', worktreePath);
+      execSync(`git worktree remove ${worktreePath}`).toString();
+    }
+
+    const output = execSync(`git worktree add --detach ${worktreePath} ${ver}`).toString();
+    console.log(output);
+  }
+}
+await getVersionsWithCommitID();
 
 // For versions <= 3.0.9, we create a git worktree to check out the release/ folder from each tag.
 async function getReleasesForVersion3OrEarlier() {
